@@ -1,0 +1,23 @@
+// Permissions for the celulas bundle
+// These permissions are simple get and register permissions for the services used in the example.
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.settings.RequiredSettingValidator", "register";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.profile.PrtappProfile", "register";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.image.DocumentWriterFactory", "get";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.settings.SettingsAdmin", "get";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.smbclient.SmbClientService", "get";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.image.ImageFactory", "get";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.storagedevice.StorageDevice", "get";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.memoryManager.MemoryManager", "get";
+
+permission org.osgi.framework.ServicePermission "org.osgi.service.http.HttpService", "get";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.webapp.WebApp", "register";
+
+permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService", "get";

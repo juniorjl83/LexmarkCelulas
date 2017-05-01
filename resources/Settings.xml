@@ -1,0 +1,320 @@
+<!-- Example of some common setting formations. -->
+<!DOCTYPE settings PUBLIC "-//LES//Settings//EN" "file:./Settings.dtd">
+
+<settings>
+   <global>
+   	<element name="settings.icon.text" type="String">
+         <description value="icon.text.description" />
+         <default value="Celulas 2" />
+         <length min="1" max="50" />
+     </element>
+     <element name="settings.log.promptName" type="String">
+         <description value="settings.log.promptName.description" />
+         <default value="Log" />
+         <length max="500" />
+      </element>
+     <element name="settings.log.server" type="String">
+         <description value="settings.log.server.description" />
+         <length min="2" max="100" />
+      </element>
+      <element name="settings.log.shareName" type="String">
+         <description value="settings.log.shareName.description" />
+         <length min="0" max="50" />
+      </element>
+      <element name="settings.log.path" type="String">
+         <description value="settings.log.path.description" />
+         <length min="0" max="100" />
+      </element>
+      <element name="settings.log.domain" type="String">
+	       	<description value="settings.log.domain.description" />
+	       	<length min="0" max="100" />
+	  </element>
+      <element name="settings.log.userId" type="String">
+         <description value="settings.log.userId.description" />
+         <length min="0" max="30" />
+      </element>
+      <element name="settings.log.password" type="String" subtype="Password">
+         <description value="settings.log.password.description" />
+         <length min="0" max="30" />
+      </element>
+     
+   </global>
+   
+	<factory name="settings.processTitle">
+		<esf:display pattern="settings.inst.pattern">
+	       	<esf:param value="settings.instanceName"/>
+	    </esf:display>
+	    
+	    <element name="settings.instanceName" type="String">
+	       	<description value="settings.instanceName.description" />
+	       	<length min="1" max="50" />
+     	</element>
+     	
+     	<!-- Servidor 1 -->
+     	
+     	<element name="settings.instanceServer1" type="String">
+	       	<description value="settings.server.description" />
+	        <length min="1" max="100" />
+	    </element>
+	    <element name="settings.instanceShareName1" type="String">
+       		<description value="settings.shareName.description" />
+        	<length min="1" max="100" />
+     	</element>	
+     	<element name="settings.instancePath1" type="String">
+	      	<description value="settings.path.description" />
+	       	<length min="0" max="100" />
+	    </element>
+	    <element name="settings.instanceDomain1" type="String">
+	       	<description value="settings.domain.description" />
+	       	<length min="0" max="100" />
+	    </element>
+	    <element name="settings.instanceUserId1" type="String">
+	       	<description value="settings.userId.description" />
+	    	<length min="1" max="30" />
+	    </element>
+	    <element name="settings.instancePassword1" type="String" subtype="Password">
+	       	<description value="settings.password.description" />
+	       	<default value="" />
+	       	<length min="1" max="30" />
+	    </element>
+	    
+	    <!-- Servidor 2 -->
+     	<element name="settings.instanceServer2" type="String">
+	       	<description value="settings.server.description" />
+	        <length min="0" max="100" />
+	    </element>
+	    <element name="settings.instanceShareName2" type="String">
+       		<description value="settings.shareName.description" />
+        	<length min="0" max="100" />
+     	</element>	
+     	<element name="settings.instancePath2" type="String">
+	      	<description value="settings.path.description" />
+	       	<length min="0" max="100" />
+	    </element>
+	    <element name="settings.instanceDomain2" type="String">
+	       	<description value="settings.domain.description" />
+	       	<length min="0" max="100" />
+	    </element>
+	    <element name="settings.instanceUserId2" type="String">
+	       	<description value="settings.userId.description" />
+	    	<length min="0" max="30" />
+	    </element>
+	    <element name="settings.instancePassword2" type="String" subtype="Password">
+	       	<description value="settings.password.description" />
+	       	<length min="0" max="30" />
+	    </element>
+	    
+	    <!-- Servidor 3 -->
+     	<element name="settings.instanceServer3" type="String">
+	       	<description value="settings.server.description" />
+	        <length min="0" max="100" />
+	    </element>
+	    <element name="settings.instanceShareName3" type="String">
+       		<description value="settings.shareName.description" />
+        	<length min="0" max="100" />
+     	</element>	
+     	<element name="settings.instancePath3" type="String">
+	      	<description value="settings.path.description" />
+	       	<length min="0" max="100" />
+	    </element>
+	    <element name="settings.instanceDomain3" type="String">
+	       	<description value="settings.domain.description" />
+	       	<length min="0" max="100" />
+	    </element>
+	    <element name="settings.instanceUserId3" type="String">
+	       	<description value="settings.userId.description" />
+	    	<length min="0" max="30" />
+	    </element>
+	    <element name="settings.instancePassword3" type="String" subtype="Password">
+	       	<description value="settings.password.description" />
+	       	<length min="0" max="30" />
+	    </element>
+
+		<!-- Scan Settins -->
+		
+		<element name="settings.isPaperSize" type="Boolean">
+			<default value="true"/>
+	    </element>
+	    <element name="settings.paperSize" type="Integer">
+            <options>
+                <option label="settings.paperSize.0" value="0"/>
+                <option label="settings.paperSize.1" value="1"/>
+                <option label="settings.paperSize.2" value="2"/>
+                <option label="settings.paperSize.3" value="3"/>
+                <option label="settings.paperSize.4" value="4"/>
+				<option label="settings.paperSize.5" value="5"/>
+				<option label="settings.paperSize.6" value="6"/>
+				<option label="settings.paperSize.7" value="7"/>
+				<option label="settings.paperSize.8" value="8"/>
+				<option label="settings.paperSize.9" value="9"/>                
+            </options>
+            <default value="0"/>
+        </element>
+	    
+	    <element name="settings.isOrientation" type="Boolean">
+			<default value="true"/>
+	    </element>
+	    <element name="settings.orientation" type="Integer">
+            <options>
+                <option label="settings.orientation.0" value="0"/>
+                <option label="settings.orientation.1" value="1"/>
+            </options>
+            <default value="0"/>
+        </element>
+        
+        <element name="settings.isContent" type="Boolean">
+			<default value="true"/>
+	    </element>
+	    <element name="settings.content" type="Integer">
+            <options>
+                <option label="settings.content.0" value="0"/>
+                <option label="settings.content.1" value="1"/>
+                <option label="settings.content.2" value="2"/>
+            </options>
+            <default value="0"/>
+        </element>
+
+        <element name="settings.isDuplex" type="Boolean">
+			<default value="true"/>
+	    </element>
+	    <element name="settings.duplex" type="Integer">
+            <options>
+                <option label="settings.duplex.0" value="0"/>
+                <option label="settings.duplex.1" value="1"/>
+                <option label="settings.duplex.2" value="2"/>
+            </options>
+            <default value="0"/>
+        </element>
+
+		<element name="settings.isFileFormat" type="Boolean">
+			<default value="true"/>
+	    </element>
+	    <element name="settings.fileFormat" type="Integer">
+            <options>
+                <option label="settings.fileFormat.0" value="0"/>
+                <option label="settings.fileFormat.3" value="3"/>
+                <option label="settings.fileFormat.1" value="1"/>
+                <option label="settings.fileFormat.2" value="2"/>
+                <option label="settings.fileFormat.6" value="6"/>
+            </options>
+            <default value="2"/>
+        </element>
+
+		<element name="settings.isResolution" type="Boolean">
+			<default value="true"/>
+	    </element>
+	    <element name="settings.resolution" type="Integer">
+            <options>
+                <option label="settings.resolution.75" value="75"/>
+                <option label="settings.resolution.150" value="150"/>
+                <option label="settings.resolution.200" value="200"/>
+                <option label="settings.resolution.300" value="300"/>
+            </options>
+            <default value="200"/>
+        </element>
+        
+        <element name="settings.isColor" type="Boolean">
+			<default value="true"/>
+	    </element>
+	    <element name="settings.color" type="Integer">
+            <options>
+                <option label="settings.color.1" value="1"/>
+                <option label="settings.color.0" value="0"/>
+            </options>
+            <default value="1"/>
+        </element>
+
+		<element name="settings.instanceFilePassword" type="String" subtype="Password">
+	       	<description value="settings.filePassword.description" />
+	       	<length min="0" max="30" />
+	    </element>
+	    
+	    <element name="settings.sucursal" type="String">
+	       	<description value="settings.sucursal.description" />
+	       	<length min="1" max="50" />
+     	</element>
+     	
+     	<element name="settings.fileName" type="String">
+	       	<description value="settings.fileName.description" />
+	       	<default value="Documento"/>
+	       	<length min="3" max="15" />
+     	</element>
+     	
+     	<element name="settings.isFileName" type="Boolean">
+			<default value="true"/>
+	    </element>
+		
+		<element name="settings.isFileDate" type="Boolean">
+			<default value="true"/>
+	    </element>
+		
+	    <layout>
+	    	<group title="settings.groupProcessName">
+	    		<settingref name="settings.instanceName"/>
+	    	</group>
+            <group title="settings.groupServer1">
+                <settingref name="settings.instanceServer1"/>
+                <settingref name="settings.instanceShareName1"/>
+                <settingref name="settings.instancePath1"/>
+                <settingref name="settings.instanceDomain1"/>
+                <settingref name="settings.instanceUserId1"/>
+                <settingref name="settings.instancePassword1"/>
+            </group>
+            <group title="settings.groupServer2">
+                <settingref name="settings.instanceServer2"/>
+                <settingref name="settings.instanceShareName2"/>
+                <settingref name="settings.instancePath2"/>
+                <settingref name="settings.instanceDomain2"/>
+                <settingref name="settings.instanceUserId2"/>
+                <settingref name="settings.instancePassword2"/>
+            </group>
+            <group title="settings.groupServer3">
+                <settingref name="settings.instanceServer3"/>
+                <settingref name="settings.instanceShareName3"/>
+                <settingref name="settings.instancePath3"/>
+                <settingref name="settings.instanceDomain3"/>
+                <settingref name="settings.instanceUserId3"/>
+                <settingref name="settings.instancePassword3"/>
+            </group>
+            <group title="settings.groupScanSettings">
+            	
+            	<group title="settings.groupPapersize">
+            		<settingref name="settings.isPaperSize"/>
+            		<settingref name="settings.paperSize" control="combo"/>
+            	</group>
+            	<group title="settings.groupOrientation">
+            		<settingref name="settings.isOrientation"/>
+            		<settingref name="settings.orientation" control="radio"/>
+            	</group>
+            	<group title="settings.groupContent">
+            		<settingref name="settings.isContent"/>
+            		<settingref name="settings.content" control="combo"/>
+            	</group>
+            	<group title="settings.groupDuplex">
+            		<settingref name="settings.isDuplex"/>
+            		<settingref name="settings.duplex" control="combo"/>
+            	</group>
+            	<group title="settings.groupFileFormat">
+            		<settingref name="settings.isFileFormat"/>
+            		<settingref name="settings.fileFormat" control="combo"/>
+            		<settingref name="settings.instanceFilePassword"/>
+            	</group>
+            	<group title="settings.groupResolution">
+            		<settingref name="settings.isResolution"/>
+            		<settingref name="settings.resolution" control="combo"/>
+            	</group>
+            	<group title="settings.groupColor">
+            		<settingref name="settings.isColor"/>
+            		<settingref name="settings.color" control="radio"/>
+            	</group>  
+            	<group title="settings.groupFileName">
+            		<settingref name="settings.sucursal"/>
+            		<settingref name="settings.fileName"/>
+            		<settingref name="settings.isFileName"/>
+            		<settingref name="settings.isFileDate"/>
+            	</group>            	            	
+            </group>
+        </layout>
+	    
+	</factory>      	
+</settings>

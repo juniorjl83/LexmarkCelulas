@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE bundle PUBLIC "-//LES//Service Binder 1.0//EN" "file:./metadata.dtd">
+
+<!-- For more information on Service Binder, see the documentation: http://gravity.sourceforge.net/servicebinder/ 
+	$ packageName = com.lexmark.example.docwriter -->
+
+<bundle>
+	<component class="com.lexmark.example.docwriter.DocWriterProfile">
+		<property name="service.pid" type="string" value="celulas" />
+		<requires service="com.lexmark.prtapp.image.DocumentWriterFactory"
+			filter="" cardinality="1..1" policy="dynamic" bind-method="addDocumentWriterFactory"
+			unbind-method="removeDocumentWriterFactory" />
+		<requires service="com.lexmark.prtapp.image.ImageFactory"
+			filter="" cardinality="1..1" policy="dynamic" bind-method="addImageFactory"
+			unbind-method="removeImageFactory" />
+		<requires service="com.lexmark.prtapp.settings.SettingsAdmin"
+			filter="" cardinality="1..1" policy="dynamic" bind-method="addSettingsAdmin"
+			unbind-method="removeSettingsAdmin" />
+		<requires service="com.lexmark.prtapp.smbclient.SmbClientService"
+			filter="" cardinality="1..1" policy="dynamic" bind-method="addSmbClientService"
+			unbind-method="removeSmbClientService" />
+		<requires
+			service="com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService"
+			filter="" cardinality="1..1" policy="dynamic" bind-method="addDeviceCharacteristics"
+			unbind-method="removeDeviceCharacteristics" />
+		<requires service="com.lexmark.prtapp.storagedevice.StorageDevice"
+			filter="(DEVICE_CATEGORY=disk)" cardinality="1..1" policy="dynamic"
+			bind-method="addStorageDevice" unbind-method="removeStorageDevice" />
+		<!-- Memory manager is 0..1 dynamic here, because we will get it on framework 
+			3.0 and above, but never on framework 2.1 or lower. -->
+		<requires service="com.lexmark.prtapp.memoryManager.MemoryManager"
+			filter="" cardinality="0..1" policy="dynamic" bind-method="addMemoryManager"
+			unbind-method="removeMemoryManager" />
+		<provides service="org.osgi.service.cm.ManagedService" />
+		<provides service="com.lexmark.prtapp.settings.RequiredSettingValidator" />
+	</component>
+
+	<!-- This is a helper class that allows the user to browse the images created 
+		on the hard drive by the example. -->
+	<component class="com.lexmark.example.docwriter.FileBrowseWebApp">
+		<!-- The HttpService is needed to register servlets as well as static content 
+			(e.g., images and HTML files). -->
+		<requires service="org.osgi.service.http.HttpService" filter=""
+			cardinality="1..1" policy="dynamic" bind-method="addHttpService"
+			unbind-method="removeHttpService" />
+
+		<!-- Providing a WebApp service allows this application to be listed when 
+			a user clicks the "Applications" link on the printer's main web site. -->
+		<provides service="com.lexmark.prtapp.webapp.WebApp" />
+	</component>
+
+</bundle>

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.8.0_121/jre/lib/rt.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/activedirectory-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/authservice-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/authtoken-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/characteristics-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/cm_all-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/knopflerfish"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/commonsfileupload-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/commons-fileupload"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/core-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/corecommunications-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/crimson_all-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/crimson"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/cryptoapi-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/deviceStatus-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/device_all-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/knopflerfish"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/driverutil-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/elementconnection-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/email-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/framework.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/knopflerfish"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/http_all-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/knopflerfish"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/iddevice-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/image-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/imageserver-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/install-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/j9jsse-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/javax-usb-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/javax-usb"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/jgss-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/jsdk-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/servlet"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/junit-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/junit/javadoc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/keyboarddevice-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/ksoap-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/ldap-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/lesSystem-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/license-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/licensemanagertest-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/log_all-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/knopflerfish"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/objects-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/oro-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/jakarta-oro"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/payloadinstall-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/pluggableAuth-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/pluggableobject-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/prtappProfile-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/prtapputil-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/remoteadmin-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/securitylogservice-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/servicebinder.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/servicebinder/api"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/sessions-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/settings-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/settingsio-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/smartcardio-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/storagedevice-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/systemManager-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/ui-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/unixdomainsocket-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/usbdevice-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/util-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/webadmin-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/lib2/webservices-lib.jar"/>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/appupdate-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/bouncycastle13-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/jce-jdk13-139/docs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/commons-codec-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/commons-codec"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/commons-logging-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/commons-logging"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/deviceauth-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/devicesettings-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/devicestatusevents-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/fasthttps-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/featurestatus-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/jcifs-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/jcifs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/jobcontrol-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/jobs-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/json_simple-component-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/json-simple"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/lowpowersleep-component-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/memory-component-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/newcharacteristics-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/newprompt-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/oro-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/jakarta-oro"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/printservice-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/shortcuts-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/smbclientservice-component-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/usbreset-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/les"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/componentlib/webdav-lib.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/LES-sdk-ESS.60.030/doc/api/commons-httpclient"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

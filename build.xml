@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!--
+  ** Bundle build file.  For more information, see the SDK
+  ** example build file: tools/example_bundle_build.xml
+  -->
+<project name="celulas" default="all">
+	<!-- Comma sepparated list of a bundles implementation code.
+        Don't need for library or api only bundles.
+        Imports and activator class can be generated from this pattern. -->
+	<property name="impl.pattern" value="com/lexmark/example/docwriter/**" />
+
+	<!-- Comma sepparated list of a bundles public api code.
+        Don't need for library or non api bundles
+        Exports can be generated from this pattern. -->
+	<!-- property name="api.pattern" value="..." / -->
+
+	<property name="bundle.description" value="Scan documents to network" />
+	<property name="bundle.version" value="1.2.1" />
+	<property name="app.isapp" value="true" />
+	<property name="bundle.baseresource" value="Resources" />
+
+	<!-- Maximum memory, in bytes, this bundle should use.  We allocate enough
+        to store a letter-size page of color scan data. -->
+	<property name="bundle.memory" value="255000000" />
+
+	<!-- Framework 3.0 has a way to request memory at run time as needed.  If running
+        on framework 3.0, these memory manager hints are used and the "bundle.memory"
+        specified above is ignored.  It is good practice to do things this way, as this
+        will allow other apps to use the memory when the fax receive app is not 
+        actively receiving a fax. -->
+	<property name="bundle.useMemoryManager" value="true" />
+	<property name="bundle.memoryManagerBase" value="500000" />
+
+	<property name="app.settings" value="Settings.xml" />
+	<!-- This is required for any app that registers a "mandatory" validator -->
+	<property name="app.hasRequiredValidator" value="true" />
+	<property name="bundle.activator" value="com.lexmark.example.docwriter.Activator" />
+	<property name="app.icon" value="celulas2.png" />
+	<!--property name="generic.cert" value="C:\desarrollo\LexmarkSDK\certificados\genericAssenda_mx611.cert" / -->
+	<!--property name="generic.cert" value="C:\desarrollo\LexmarkSDK\certificados\genericAssendaMX611banco.cert"/ -->
+
+
+	<!-- classpath for bundles.  Only needed if jars are included in bundle. -->
+	<property name="bundle.classpath" value="." />
+
+	<property name="bundle.metadata" value="Metadata.xml" />
+
+	<!-- This example needs the memory component for compatibility with framework 2.1 -->
+	<property name="autodep.enabled" value="true" />
+
+	<!-- This ensures the bundle compiles against the correct set of libraries -->
+	<property name="framework.compile.version" value="fw3" />
+
+	<!-- Following property will pick all the settings for LES_SDK environment
+   variable as mentioned in installation guide -->
+	<property environment="sysprops" />
+	<import file="${sysprops.LES_SDK}/tools/bundlebuild_import.xml" />
+
+	<path id="flash.components">
+		<fileset dir="${sysprops.LES_SDK}/components" includes="smbclientservice-component.jar" />
+		<fileset dir="${sysprops.LES_SDK}/components" includes="newcharacteristics.jar" />
+	</path>
+
+</project>
