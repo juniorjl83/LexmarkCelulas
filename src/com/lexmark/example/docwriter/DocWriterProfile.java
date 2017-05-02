@@ -83,7 +83,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    private ServiceBinderContext sbc = null;
 
    private DeviceCharacteristicsService characteristicsService = null;
-   String lineLog = null;
+   Log lineLog = new Log();
 
    /**
     * Helper class that does the document writer stuff. The array list of file
@@ -223,7 +223,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             Activator.getLog().info("err abre lg ");
             e.printStackTrace();
          }
-
+         int numSheets = fileNames.size();
+         lineLog.setNumSheets(numSheets);
          WriteLog wl = new WriteLog(clientLog, Activator.getLog(), fileName,
                lineLog);
          wl.start();
@@ -520,8 +521,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   WaitMessagePrompt wmp = (WaitMessagePrompt) context
                         .getPromptFactory().newPrompt(WaitMessagePrompt.ID);
 
-                  lineLog = getlineLog(instance, lstServers, idDocumento,
-                        fileType);
+                  getlineLog(instance, lstServers, idDocumento, fileType);
 
                   // This guy does all of the work
                   Activator.getLog().info("antes de estopable");
@@ -586,28 +586,23 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       }
    }
 
-   private String getlineLog(SettingDefinitionMap instance,
-         ArrayList lstServers, String idDocumento, String fileType)
+   private void getlineLog(SettingDefinitionMap instance, ArrayList lstServers,
+         String idDocumento, String fileType)
    {
       StringBuffer line = new StringBuffer("");
       String serialNumber = characteristicsService.get("serialNumber");
-      line.append(serialNumber);
-      line.append(",");
+      String celula = (String) instance.get("settings.instanceName").getCurrentValue();
       SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
-      String fecha = sdf.format(new Date());
-      String rutas = getRutasEscaneo(lstServers);
-      line.append(rutas);
-      line.append(",");
-      line.append(fecha);
-      line.append(",");
-      line.append(
-            (String) instance.get("settings.instanceName").getCurrentValue());
-      line.append("-");
-      line.append(idDocumento);
-      line.append("-");
-      line.append(fileType);
+      String date = sdf.format(new Date());
+      String path = getRutasEscaneo(lstServers);
+      
+      lineLog.setSerial(serialNumber);
+      lineLog.setPath(path);
+      lineLog.setDate(date);
+      lineLog.setNameCelula(celula);
+      lineLog.setNameDocument(idDocumento);
+      lineLog.setFileType(fileType);
 
-      return line.toString();
    }
 
    private String getRutasEscaneo(ArrayList lstServers)

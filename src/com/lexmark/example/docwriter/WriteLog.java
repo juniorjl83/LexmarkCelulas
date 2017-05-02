@@ -21,11 +21,11 @@ public class WriteLog extends Thread
    private String aa = "99";
    private String mm = "99";
    private String dd = "99";
-   private String line = "NA";
+   private Log line;
    private Boolean isFinish = Boolean.FALSE;
 
    public WriteLog(SmbClient client, AppLogRef log, String fileName,
-         String line)
+         Log line)
    {
       super();
       this.client = client;
@@ -45,7 +45,9 @@ public class WriteLog extends Thread
       aa = faa.format(date);
       mm = fmm.format(date);
       dd = fdd.format(date);
-      fileName = fileName + aa + mm + dd + ".txt";
+      //disable date, just one file
+      // fileName = fileName + aa + mm + dd + ".txt";
+      fileName = fileName + ".txt";
 
       InputStream inputStream = null;
       OutputStream fileStream = null;
@@ -78,7 +80,7 @@ public class WriteLog extends Thread
          else
          {
             fileStream = client.getOutputStream("", fileName);
-            fileStream.write(line.getBytes());
+            fileStream.write(line.toString().getBytes());
          }
       }
       catch (ConnectionException e)
@@ -103,8 +105,8 @@ public class WriteLog extends Thread
       {
          try
          {
-            if (fileStream != null) 
-               
+            if (fileStream != null)
+
                fileStream.close();
             if (inputStream != null) inputStream.close();
          }
