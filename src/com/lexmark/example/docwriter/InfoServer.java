@@ -43,21 +43,21 @@ public class InfoServer
    }
 
 
-   public ArrayList obtenerInforServers(SettingDefinitionMap instance){
+   public ArrayList obtenerInforServers(SettingDefinitionMap instance, SettingDefinitionMap ourAppSettings){
       
       activator.info("entra obtenerInforServers");
       ArrayList lstServer = new ArrayList();
       
-      validateAddServerValues(instance, lstServer, "1");
-      validateAddServerValues(instance, lstServer, "2");
-      validateAddServerValues(instance, lstServer, "3");
+      validateAddServerValues(instance, ourAppSettings, lstServer, "1");
+      validateAddServerValues(instance, ourAppSettings, lstServer, "2");
+      validateAddServerValues(instance, ourAppSettings, lstServer, "3");
       
       return lstServer;
       
    }
 
    private void validateAddServerValues(SettingDefinitionMap instance, 
-         ArrayList lstServer, String numServer)
+         SettingDefinitionMap ourAppSettings, ArrayList lstServer, String numServer)
    {
       activator.info("entra validateAddServerValues");
       
@@ -65,8 +65,8 @@ public class InfoServer
       String instanceSharedName = (String)instance.get("settings.instanceShareName"+numServer).getCurrentValue();
       String instanceDomain = (String)instance.get("settings.instanceDomain"+numServer).getCurrentValue();
       String instancePath = (String)instance.get("settings.instancePath"+numServer).getCurrentValue();
-      String instanceUserId = (String)instance.get("settings.instanceUserId"+numServer).getCurrentValue();
-      String instancePassword = (String)instance.get("settings.instancePassword"+numServer).getCurrentValue();
+      String instanceUserId = (String) ourAppSettings.get("settings.network.user").getCurrentValue();
+      String instancePassword = (String) ourAppSettings.get("settings.network.password").getCurrentValue();
       
       activator.info("instanceServer"+numServer + " - " + instanceServer);
       activator.info("instanceSharedName"+numServer + " - " + instanceSharedName);

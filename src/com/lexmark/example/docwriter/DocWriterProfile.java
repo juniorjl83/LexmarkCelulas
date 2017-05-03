@@ -188,10 +188,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                .getCurrentValue();
          String domainLog = (String) ourAppSettings.get("settings.log.domain")
                .getCurrentValue();
-         String userName = (String) ourAppSettings.get("settings.log.userId")
+         String userName = (String) ourAppSettings.get("settings.network.user")
                .getCurrentValue();
-         String password = (String) ourAppSettings.get("settings.log.password")
-               .getCurrentValue();
+         String password = (String) ourAppSettings
+               .get("settings.network.password").getCurrentValue();
          String fileName = (String) ourAppSettings
                .get("settings.log.promptName").getCurrentValue();
 
@@ -387,6 +387,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          }
 
          SettingsGroup instances = settingsAdmin.getInstanceSettings("celulas");
+         SettingDefinitionMap ourAppSettings = settingsAdmin
+               .getGlobalSettings("celulas");
          Set set = instances.getInstancePids();
          ArrayList names = new ArrayList();
          ArrayList pids = new ArrayList();
@@ -440,7 +442,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             // prompt corresponding to that instance.
 
             InfoServer infoServer = new InfoServer(Activator.getLog());
-            ArrayList lstServers = infoServer.obtenerInforServers(instance);
+            ArrayList lstServers = infoServer.obtenerInforServers(instance,
+                  ourAppSettings);
             Activator.getLog()
                   .info("cantidad servidores:: " + lstServers.size());
             infoServer.verificarConexiones(lstServers, smbClientService);
@@ -591,11 +594,12 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    {
       StringBuffer line = new StringBuffer("");
       String serialNumber = characteristicsService.get("serialNumber");
-      String celula = (String) instance.get("settings.instanceName").getCurrentValue();
+      String celula = (String) instance.get("settings.instanceName")
+            .getCurrentValue();
       SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
       String date = sdf.format(new Date());
       String path = getRutasEscaneo(lstServers);
-      
+
       lineLog.setSerial(serialNumber);
       lineLog.setPath(path);
       lineLog.setDate(date);
@@ -616,6 +620,9 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          server.append("\\");
          server.append(infoServer.getInstanceSharedName());
          server.append(infoServer.getInstancePath());
+         if ( (i+1) < lstServers.size() ){
+            server.append("-");
+         }
       }
       return server.toString();
    }
@@ -894,24 +901,24 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                .get("settings.instanceShareName1");
          String domain1 = (String) settings.get("settings.instanceDomain1");
          String path1 = (String) settings.get("settings.instancePath1");
-         String userId1 = (String) settings.get("settings.instanceUserId1");
-         String password1 = (String) settings.get("settings.instancePassword1");
+         String userId1 = (String) settings.get("settings.network.user");
+         String password1 = (String) settings.get("settings.network.password");
 
          String server2 = (String) settings.get("settings.instanceServer2");
          String sharedName2 = (String) settings
                .get("settings.instanceShareName2");
          String domain2 = (String) settings.get("settings.instanceDomain2");
          String path2 = (String) settings.get("settings.instancePath2");
-         String userId2 = (String) settings.get("settings.instanceUserId2");
-         String password2 = (String) settings.get("settings.instancePassword2");
+         String userId2 = (String) settings.get("settings.network.user");
+         String password2 = (String) settings.get("settings.network.password");
 
          String server3 = (String) settings.get("settings.instanceServer3");
          String sharedName3 = (String) settings
                .get("settings.instanceShareName3");
          String domain3 = (String) settings.get("settings.instanceDomain3");
          String path3 = (String) settings.get("settings.instancePath3");
-         String userId3 = (String) settings.get("settings.instanceUserId3");
-         String password3 = (String) settings.get("settings.instancePassword3");
+         String userId3 = (String) settings.get("settings.network.user");
+         String password3 = (String) settings.get("settings.network.password");
 
          if (!isEmpty(server1) && !isEmpty(sharedName1) && !isEmpty(userId1)
                && !isEmpty(password1))
@@ -972,8 +979,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          String sharedNameLog = (String) settings.get("settings.log.shareName");
          String domainLog = (String) settings.get("settings.log.domain");
          String pathLog = (String) settings.get("settings.log.path");
-         String userIdLog = (String) settings.get("settings.log.userId");
-         String passwordLog = (String) settings.get("settings.log.password");
+         String userIdLog = (String) settings.get("settings.network.user");
+         String passwordLog = (String) settings
+               .get("settings.network.password");
+
 
          if (!isEmpty(serverLog) && !isEmpty(sharedNameLog)
                && !isEmpty(userIdLog) && !isEmpty(passwordLog))
