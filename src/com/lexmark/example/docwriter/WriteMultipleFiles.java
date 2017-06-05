@@ -10,6 +10,7 @@ import java.util.Date;
 import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageFactory;
 import com.lexmark.prtapp.image.JpegImageWriter;
+import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.smbclient.SmbClient;
 import com.lexmark.prtapp.util.AppLogRef;
 
@@ -23,10 +24,12 @@ public class WriteMultipleFiles extends Thread
    private String ext;
    private AppLogRef log;
    private Boolean isFinish = Boolean.FALSE;
-   
+   private MemoryManagerInstance memoryManager;
+   private boolean isLastFile = false;
+
    public WriteMultipleFiles(ImageFactory imageFactory, SmbClient client,
          ArrayList lstImages, String fileName, Boolean isDateMark, String ext,
-         AppLogRef log)
+         AppLogRef log, MemoryManagerInstance memoryManager, boolean isLastFile)
    {
       super();
       this.imageFactory = imageFactory;
@@ -36,44 +39,60 @@ public class WriteMultipleFiles extends Thread
       this.isDateMark = isDateMark;
       this.ext = ext;
       this.log = log;
+      this.memoryManager = memoryManager;
+      this.isLastFile = isLastFile;
    }
 
    public void run()
    {
       String dateMark = "";
-      if (isDateMark.booleanValue()){
+      if (isDateMark.booleanValue())
+      {
          log.info("entra marca fecha");
          dateMark = dateMark + "-";
          SimpleDateFormat sdf = new SimpleDateFormat("MMddyyHHmmss");
          Date date = new Date();
-         dateMark = dateMark +  sdf.format(date);
+         dateMark = dateMark + sdf.format(date);
          Activator.getLog().info("fecha texto: " + dateMark);
       }
-      
-      for(int i = 0; i < lstImages.size(); i++)
-      {  
-         try
-         {  
-            File file = (File)lstImages.get(i);
-            Image img = imageFactory.newImage(file);
+      Image img = null;
+      try
+      {
+         for (int i = 0; i < lstImages.size(); i++)
+         {
+            File file = (File) lstImages.get(i);
+            img = imageFactory.newImage(file);
             log.info("lee imagen: " + i);
-            
-            OutputStream os = client.getOutputStream("",  fileName + dateMark + "-" + i + ext);
+
+            OutputStream os = client.getOutputStream("",
+                  fileName + dateMark + "-" + i + ext);
             JpegImageWriter jw = new JpegImageWriter(80, true);
             img.write(os, jw);
             log.info("escribe imagen: " + i);
             os.close();
             os = null;
+            if(img != null){
+               img.freeResources();
+               img = null;   
+            }
+            if ( isLastFile && file != null ){
+               file.delete();
+            }
+         }
+
+         isFinish = Boolean.TRUE;
+         log.info("finaliza hilo write multiple files: " + this);
+      }
+      catch (Exception e)
+      {
+         log.info("error WriteMultipleOneFile: " + e.getMessage());
+      }finally{
+         if(img != null){
             img.freeResources();
             img = null;
          }
-         catch (Exception e)
-         {
-            log.info("error WriteMultipleOneFile: " + e.getMessage());
-         }
+         if(memoryManager.getNativeMem() != null && isLastFile) memoryManager.releaseMemory();
       }
-      isFinish = Boolean.TRUE;
-      log.info("finaliza hilo: " + this);
    }
 
    public Boolean isFinish()

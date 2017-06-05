@@ -24,8 +24,7 @@ public class WriteLog extends Thread
    private Log line;
    private Boolean isFinish = Boolean.FALSE;
 
-   public WriteLog(SmbClient client, AppLogRef log, String fileName,
-         Log line)
+   public WriteLog(SmbClient client, AppLogRef log, String fileName, Log line)
    {
       super();
       this.client = client;
@@ -45,7 +44,7 @@ public class WriteLog extends Thread
       aa = faa.format(date);
       mm = fmm.format(date);
       dd = fdd.format(date);
-      //disable date, just one file
+      // disable date, just one file
       // fileName = fileName + aa + mm + dd + ".txt";
       fileName = fileName + ".txt";
 
@@ -105,10 +104,9 @@ public class WriteLog extends Thread
       {
          try
          {
-            if (fileStream != null)
-
-               fileStream.close();
+            if (fileStream != null) fileStream.close();
             if (inputStream != null) inputStream.close();
+            if (client != null) client.close();
          }
          catch (IOException e)
          {

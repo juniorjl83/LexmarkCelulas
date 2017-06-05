@@ -8,6 +8,7 @@ import com.lexmark.prtapp.image.DocumentWriter;
 import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageException;
 import com.lexmark.prtapp.image.ImageFactory;
+import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.smbclient.SmbClient;
 import com.lexmark.prtapp.util.AppLogRef;
 import com.lexmark.ui.Constants;
@@ -24,11 +25,13 @@ public class WriteOneFile extends Thread
    private Boolean isDateMark;
    private AppLogRef log;
    private Boolean isFinish = Boolean.FALSE;
+   private MemoryManagerInstance memoryManager;
+   private boolean isLastFile = false;
    
    
    public WriteOneFile(DocumentWriter dw, ImageFactory imageFactory, AppLogRef log,
          SmbClient client, int fileFormat, String fileName, String filePassword, ArrayList lstImages,
-         Boolean isDateMark)
+         Boolean isDateMark, MemoryManagerInstance memoryManager, boolean isLastFile)
    {
       super();
       this.dw = dw;
@@ -40,6 +43,8 @@ public class WriteOneFile extends Thread
       this.filePassword = filePassword;
       this.lstImages = lstImages;
       this.isDateMark = isDateMark;
+      this.memoryManager = memoryManager;
+      this.isLastFile = isLastFile;
    }
 
    public void run()
@@ -50,29 +55,41 @@ public class WriteOneFile extends Thread
       if ( fileFormat == Constants.e_SECURE_PDF ){
          dw.setPassword(filePassword, 2);
       }
-      
+      /*if (fileFormat == Constants.e_SECURE_PDF ||
+            fileFormat == Constants.e_PDF ){
+         log.info("antes de compression");
+         dw.setCompression(Constants.eZLIB);
+         log.info("despues de compression");
+      }*/
+      Image img = null;   
       try
       {
          for(int i = 0; i < lstImages.size(); i++)
          {  
                log.info("lee imagen: " + i);
-               Image img = null;
+   
                File file = (File)lstImages.get(i);
                img = imageFactory.newImage(file);
-               
                dw.write(img);
                log.info("escribe imagen: " + i + " en one file");
                img.freeResources();
                img = null;
-         
-            
+               
+               if ( isLastFile && file != null ){
+                  file.delete();
+               }
          }
       }
       catch (Exception e)
       {
          log.info("error WriteOneFile: " + e.getMessage());
       }finally{
-         dw.close();  
+         dw.close();
+         if(img != null){
+            img.freeResources();
+            img = null;
+         }
+         if(memoryManager.getNativeMem() != null && isLastFile) memoryManager.releaseMemory();
       }
       
       

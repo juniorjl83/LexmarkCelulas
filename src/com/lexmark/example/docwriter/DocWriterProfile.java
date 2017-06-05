@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -28,6 +30,7 @@ import com.lexmark.prtapp.image.DocumentWriterFactory;
 import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageFactory;
 import com.lexmark.prtapp.image.JpegImageWriter;
+import com.lexmark.prtapp.memoryManager.MemoryException;
 import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.memoryManager.NativeMemory;
 import com.lexmark.prtapp.profile.BasicProfileContext;
@@ -35,6 +38,7 @@ import com.lexmark.prtapp.profile.PrtappProfile;
 import com.lexmark.prtapp.profile.PrtappProfileException;
 import com.lexmark.prtapp.profile.WelcomeScreenable;
 import com.lexmark.prtapp.prompt.PromptException;
+import com.lexmark.prtapp.prompt.PromptFactoryException;
 import com.lexmark.prtapp.settings.SettingDefinition;
 import com.lexmark.prtapp.settings.SettingDefinitionMap;
 import com.lexmark.prtapp.settings.SettingsAdmin;
@@ -99,6 +103,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       String fileType;
       String filePassword;
       BasicProfileContext context;
+      MemoryManagerInstance memoryManager;
 
       /**
        * Constructor.
@@ -109,6 +114,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
        * @param filePassword
        * @param fileType
        * @param context
+       * @param memoryManager
        * @param destFile
        *           The file where we will save the PDF
        * @param isColor
@@ -117,7 +123,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
        */
       public MyStoppable(MyScanConsumer myConsumer, String fileName,
             ArrayList lstServers, String fileType, String filePassword,
-            BasicProfileContext context)
+            BasicProfileContext context, MemoryManagerInstance memoryManager)
       {
          this.myConsumer = myConsumer;
          this.fileNames = myConsumer.imagesOnDisk;
@@ -126,6 +132,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          this.fileType = fileType;
          this.filePassword = filePassword;
          this.context = context;
+         this.memoryManager = memoryManager;
       }
 
       /*
@@ -141,9 +148,15 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
          ArrayList lstThreads = new ArrayList();
 
+         boolean isLastFile = false;
          for (int j = 0; j < lstServers.size(); j++)
          {
 
+            if ((j + 1) == lstServers.size())
+            {
+               isLastFile = true;
+               Activator.getLog().info("is last file");
+            }
             SmbClient client = ((InfoServer) lstServers.get(j)).getClient();
 
             if (fileType.equals("JPG"))
@@ -151,7 +164,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                Activator.getLog().info("jpg archivo, servidor " + j);
                WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
                      client, fileNames, fileName, isDateMark, ".jpg",
-                     Activator.getLog());
+                     Activator.getLog(), memoryManager, isLastFile);
                lstThreads.add(mf);
                mf.start();
             }
@@ -160,7 +173,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                Activator.getLog().info("multitiff archivo, servidor " + j);
                WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
                      client, fileNames, fileName, isDateMark, ".tif",
-                     Activator.getLog());
+                     Activator.getLog(), memoryManager, isLastFile);
                lstThreads.add(mf);
                mf.start();
             }
@@ -172,7 +185,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                      .newDocumentWriter(fileFormat);
                WriteOneFile of = new WriteOneFile(dw, imageFactory,
                      Activator.getLog(), client, fileFormat, fileName,
-                     filePassword, fileNames, isDateMark);
+                     filePassword, fileNames, isDateMark, memoryManager,
+                     isLastFile);
                lstThreads.add(of);
                of.start();
             }
@@ -378,20 +392,30 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    public void go(BasicProfileContext context) throws PrtappProfileException
    {
       NativeMemory nativeMem = null;
+      MemoryManagerInstance memoryManagerInstance = null;
       isMultiTiff = Boolean.FALSE;
       try
       {
+         if (verifyOldFiles())
+         {
+
+            throw new MemoryException(1000);
+         }
          if (memoryManager != null)
          {
+            Activator.getLog().info("entra a reserva de memoria");
             nativeMem = memoryManager.reserveNativeMemory(250000000);
-         }
 
+         }
+         memoryManagerInstance = new MemoryManagerInstance(nativeMem,
+               memoryManager);
          SettingsGroup instances = settingsAdmin.getInstanceSettings("celulas");
          SettingDefinitionMap ourAppSettings = settingsAdmin
                .getGlobalSettings("celulas");
          Set set = instances.getInstancePids();
          ArrayList names = new ArrayList();
          ArrayList pids = new ArrayList();
+         ArrayList lstComboCelula = new ArrayList();
          Iterator i = set.iterator();
 
          while (i.hasNext())
@@ -399,15 +423,32 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             String pid = (String) i.next();
             SettingDefinitionMap instance = instances.getInstance(pid);
             SettingDefinition name = instance.get("settings.instanceName");
-            names.add(name.getCurrentValue());
-            pids.add(pid);
+            // names.add(name.getCurrentValue());
+            // pids.add(pid);
+            lstComboCelula
+                  .add(new ComboCelula((String) name.getCurrentValue(), pid));
+         }
+
+         Collections.sort(lstComboCelula, new Comparator());
+
+         for (int j = 0; j < lstComboCelula.size(); j++)
+         {
+            ComboCelula current = (ComboCelula) lstComboCelula.get(j);
+            names.add(current.getName());
+            pids.add(current.getPid());
          }
 
          if (names.size() > 0)
          {
 
             String[] namesAsArray = (String[]) names.toArray(new String[0]);
-            Arrays.sort(namesAsArray, String.CASE_INSENSITIVE_ORDER);
+            /*
+             * Arrays.sort(namesAsArray, String.CASE_INSENSITIVE_ORDER);
+             * 
+             * String[] pidsAsArray = (String[]) pids.toArray(new String[0]);
+             * Arrays.sort(pidsAsArray, String.CASE_INSENSITIVE_ORDER);
+             */
+
             ComboPrompt cp = (ComboPrompt) context.getPromptFactory()
                   .newPrompt(ComboPrompt.ID);
             cp.setItems(namesAsArray);
@@ -450,7 +491,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             String logServer = logServerReturn(lstServers);
             Activator.getLog().info("Servers:" + logServer);
 
-            String sucursal = (String) instance.get("settings.sucursal")
+            String sucursal = (String) ourAppSettings.get("settings.sucursal")
                   .getCurrentValue();
             String fileName = sucursal + "-" + idDocumento;
 
@@ -515,7 +556,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   context.displayWorkflow(docWorkflow);
 
                   MyScanConsumer myConsumer = new MyScanConsumer(imageFactory,
-                        disk);
+                        disk, memoryManagerInstance);
 
                   docWorkflow.setConsumer(myConsumer);
                   context.startWorkflow(docWorkflow,
@@ -527,9 +568,11 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   getlineLog(instance, lstServers, idDocumento, fileType);
 
                   // This guy does all of the work
+
                   Activator.getLog().info("antes de estopable");
                   MyStoppable myStoppable = new MyStoppable(myConsumer,
-                        fileName, lstServers, fileType, filePassword, context);
+                        fileName, lstServers, fileType, filePassword, context,
+                        memoryManagerInstance);
 
                   wmp.setWorkerRunnable(myStoppable, "Creación del archivo");
                   wmp.setMessage("Enviando el archivo...");
@@ -570,22 +613,37 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             context.displayPrompt(noInstances);
          }
       }
+      catch (MemoryException e)
+      {
+         MessagePrompt noInstances;
+         try
+         {
+            noInstances = (MessagePrompt) context.getPromptFactory()
+                  .newPrompt(MessagePrompt.ID);
+            noInstances.setMessage(
+                  "No es posible ingresar mientra se procesa el anterior trabajo. Intente mas tarde!");
+            context.displayPrompt(noInstances);
+         }
+         catch (Exception e1)
+         {
+            Activator.getLog()
+                  .info("Prompt stopped Memory manager: " + e.getMessage());
+         }
+
+      }
       catch (PromptException e)
       {
          Activator.getLog().info("Prompt stopped: " + e.getMessage());
+         if (memoryManagerInstance != null
+               && memoryManagerInstance.getNativeMem() != null)
+            memoryManagerInstance.releaseMemory();
       }
       catch (Exception e)
       {
          Activator.getLog().info("Exception thrown", e);
-      }
-      finally
-      {
-         // Normally, we'd clean up any temp files here, but they are all in our
-         // disk
-         // storage area, so when the app is uninstalled, they will go away.
-         // So we leave them there for debugging purposes.
-         if (nativeMem != null && memoryManager != null)
-            memoryManager.freeMemory(nativeMem);
+         if (memoryManagerInstance != null
+               && memoryManagerInstance.getNativeMem() != null)
+            memoryManagerInstance.releaseMemory();
       }
    }
 
@@ -620,7 +678,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          server.append("\\");
          server.append(infoServer.getInstanceSharedName());
          server.append(infoServer.getInstancePath());
-         if ( (i+1) < lstServers.size() ){
+         if ((i + 1) < lstServers.size())
+         {
             server.append("-");
          }
       }
@@ -727,6 +786,17 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          File fileToDelete = new File(root, files[i]);
          fileToDelete.delete();
       }
+   }
+
+   private boolean verifyOldFiles()
+   {
+      File root = disk.getRootPath();
+      String[] files = root.list();
+      if (files.length > 0)
+      {
+         return true;
+      }
+      return false;
    }
 
    public InputStream getDownIcon()
@@ -982,7 +1052,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          String userIdLog = (String) settings.get("settings.network.user");
          String passwordLog = (String) settings
                .get("settings.network.password");
-
 
          if (!isEmpty(serverLog) && !isEmpty(sharedNameLog)
                && !isEmpty(userIdLog) && !isEmpty(passwordLog))

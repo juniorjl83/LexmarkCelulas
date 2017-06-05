@@ -26,6 +26,7 @@ public class MyScanConsumer implements ScanConsumer
    private StorageDevice disk;
    private boolean isFinished = false;
    private Object synch = new Object();
+   private MemoryManagerInstance memoryManager;
    
    public ArrayList imagesOnDisk = new ArrayList();
    
@@ -33,13 +34,15 @@ public class MyScanConsumer implements ScanConsumer
     * Constructor.
     * @param imageFactory Used in the consume method to create an Image for each
     * scan file.
+    * @param memoryManagerInstance 
     * @param docWriterFactory Used in the consume method to create the document (PDF)
     * from the image files.
     */
-   public MyScanConsumer(ImageFactory imageFactory, StorageDevice disk)
+   public MyScanConsumer(ImageFactory imageFactory, StorageDevice disk, MemoryManagerInstance memoryManager)
    {
       this.imageFactory = imageFactory;
       this.disk = disk;
+      this.memoryManager = memoryManager;
    }
 
    /* (non-Javadoc)
@@ -80,10 +83,12 @@ public class MyScanConsumer implements ScanConsumer
          // TODO: we could kill off the doc writer and delete anything it may have
          // written, since it would just be a partial file
          Activator.getLog().info("Problem creating document", e);
+         if(memoryManager.getNativeMem() != null) memoryManager.releaseMemory();
       }
       finally
       {
          if(currentImage != null) currentImage.freeResources();
+         
       }
       
       // This will notify anyone who has called waitForComplete that we're finished processing.
