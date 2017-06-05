@@ -733,19 +733,12 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       // Formato Archivo obligado es jpeg para tratar imagen por imagen
       WorkflowSetting fileFormat = docWorkflow.getSettingCollection()
             .getSetting("fileFormat");
-      fileFormat.setInfo(new IntegerElem(Constants.e_JPEG));
+      fileFormat.setInfo(new IntegerElem(Constants.e_TIFF));
       fileFormat.lock();
 
       WorkflowSetting multiPageTiff = docWorkflow.getSettingCollection()
             .getSetting("multiPageTiff");
-      if (isMultiTiff.booleanValue())
-      {
          multiPageTiff.setInfo(new IntegerElem(0));
-      }
-      else
-      {
-         multiPageTiff.setInfo(new IntegerElem(1));
-      }
    }
 
    private void setConfiguracion(SettingDefinitionMap instance,

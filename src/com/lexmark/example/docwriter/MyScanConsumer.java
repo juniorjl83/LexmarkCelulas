@@ -8,6 +8,7 @@ import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageFactory;
 import com.lexmark.prtapp.image.JpegImageWriter;
 import com.lexmark.prtapp.image.TiffImageWriter;
+import com.lexmark.prtapp.image.TiffImageWriter.TiffCompression;
 import com.lexmark.prtapp.scan.ScanConsumer;
 import com.lexmark.prtapp.scan.ScanData;
 import com.lexmark.prtapp.storagedevice.StorageDevice;
@@ -65,12 +66,12 @@ public class MyScanConsumer implements ScanConsumer
             
             if(!currentImage.isBlank(80)){
             
-               File file = new File(disk.getRootPath(), "scan" + n + ".jpg");
-               JpegImageWriter jw = new JpegImageWriter(80, true);
+               File file = new File(disk.getRootPath(), "scan" + n + ".tif");
+               TiffImageWriter jw = new TiffImageWriter(TiffImageWriter.G4, TiffImageWriter.OVERWRITE);
                currentImage.write(file, jw);
                imagesOnDisk.add(file);
 
-               Activator.getLog().info("MyScanConsumer.consume: saved image as a jpg here: " + file);
+               Activator.getLog().info("MyScanConsumer.consume: saved image as a tiff here: " + file);
 
                currentImage.freeResources();
                currentImage = null;
