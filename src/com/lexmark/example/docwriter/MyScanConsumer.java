@@ -85,6 +85,7 @@ public class MyScanConsumer implements ScanConsumer
          // written, since it would just be a partial file
          Activator.getLog().info("Problem creating document", e);
          if(memoryManager.getNativeMem() != null) memoryManager.releaseMemory();
+         cleanUpOldFiles();
       }
       finally
       {
@@ -125,5 +126,16 @@ public class MyScanConsumer implements ScanConsumer
       }
       
       return isFinished;
+   }
+   
+   private void cleanUpOldFiles()
+   {
+      File root = disk.getRootPath();
+      String[] files = root.list();
+      for (int i = 0; i < files.length; i++)
+      {
+         File fileToDelete = new File(root, files[i]);
+         fileToDelete.delete();
+      }
    }
 }
