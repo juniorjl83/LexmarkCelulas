@@ -165,8 +165,10 @@ public class InfoServer
    public void verificarConexiones(ArrayList lstServers,
          SmbClientService smbClientService)
    {
+      ArrayList lstServersTmp = new ArrayList();
       int validaNServer = 1;
       activator.info("verificarConexiones");
+      activator.info("tamaño lista: " + lstServers.size());
       for ( int i=0; i < lstServers.size(); i++){
          
          ConfigBuilder configBuilder = smbClientService.getSmbConfigBuilder();
@@ -180,7 +182,7 @@ public class InfoServer
          }
 
          configBuilder.setShare(infoServer.instanceSharedName);
-         configBuilder.setPath(infoServer.instancePath);
+         //configBuilder.setPath(infoServer.instancePath);
          configBuilder.setUserId(infoServer.instanceUserId);
          configBuilder.setPassword(infoServer.getInstancePassword());
          
@@ -188,16 +190,22 @@ public class InfoServer
          {
             client = smbClientService.getNewSmbClient(configBuilder.build());
             client.connect();
+            activator.info("List Path " + infoServer.getInstancePath());
+            client.listFiles(infoServer.getInstancePath());
             infoServer.setClient(client);
+            lstServersTmp.add(infoServer);
          }
          catch (Exception e)
          {
+            activator.info("Excepcion " + e.getClass());
             activator.info("Error conexion servidor " + validaNServer);
+            infoServer.setClient(null);
             //lstServers.remove(i);
             //i--;
          }
          validaNServer++;
       }
+      lstServers = lstServersTmp;
    }
 
    public String toString()

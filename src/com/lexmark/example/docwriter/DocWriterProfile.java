@@ -85,6 +85,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    private ServiceRegistration profileRegistration = null;
    boolean activated = false;
    private ServiceBinderContext sbc = null;
+   private String gralSmbUser = "";
+   private String gralSmbPassword = "";
 
    private DeviceCharacteristicsService characteristicsService = null;
    Log lineLog = new Log();
@@ -738,7 +740,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
       WorkflowSetting multiPageTiff = docWorkflow.getSettingCollection()
             .getSetting("multiPageTiff");
-         multiPageTiff.setInfo(new IntegerElem(0));
+      multiPageTiff.setInfo(new IntegerElem(0));
    }
 
    private void setConfiguracion(SettingDefinitionMap instance,
@@ -964,63 +966,80 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                .get("settings.instanceShareName1");
          String domain1 = (String) settings.get("settings.instanceDomain1");
          String path1 = (String) settings.get("settings.instancePath1");
-         String userId1 = (String) settings.get("settings.network.user");
-         String password1 = (String) settings.get("settings.network.password");
+         /*
+          * String userId1 = (String) settings.get("settings.network.user");
+          * String password1 = (String)
+          * settings.get("settings.network.password");
+          */
 
          String server2 = (String) settings.get("settings.instanceServer2");
          String sharedName2 = (String) settings
                .get("settings.instanceShareName2");
          String domain2 = (String) settings.get("settings.instanceDomain2");
          String path2 = (String) settings.get("settings.instancePath2");
-         String userId2 = (String) settings.get("settings.network.user");
-         String password2 = (String) settings.get("settings.network.password");
+         /*
+          * String userId2 = (String) settings.get("settings.network.user");
+          * String password2 = (String)
+          * settings.get("settings.network.password");
+          */
 
          String server3 = (String) settings.get("settings.instanceServer3");
          String sharedName3 = (String) settings
                .get("settings.instanceShareName3");
          String domain3 = (String) settings.get("settings.instanceDomain3");
          String path3 = (String) settings.get("settings.instancePath3");
-         String userId3 = (String) settings.get("settings.network.user");
-         String password3 = (String) settings.get("settings.network.password");
+         /*
+          * String userId3 = (String) settings.get("settings.network.user");
+          * String password3 = (String)
+          * settings.get("settings.network.password");
+          */
 
-         if (!isEmpty(server1) && !isEmpty(sharedName1) && !isEmpty(userId1)
-               && !isEmpty(password1))
+         if (!isEmpty(server1) && !isEmpty(sharedName1) && !isEmpty(gralSmbUser)
+               && !isEmpty(gralSmbPassword))
          {
             Activator.getLog().info("ENTRA A SETEAR SERVER 1");
             lstServer.add(new InfoServer(server1, sharedName1, domain1, path1,
-                  userId1, password1));
+                  gralSmbUser, gralSmbPassword));
          }
 
-         if (!isEmpty(server2) && !isEmpty(sharedName2) && !isEmpty(userId2)
-               && !isEmpty(password2))
+         if (!isEmpty(server2) && !isEmpty(sharedName2) && !isEmpty(gralSmbUser)
+               && !isEmpty(gralSmbPassword))
          {
             Activator.getLog().info("ENTRA A SETEAR SERVER 2");
             lstServer.add(new InfoServer(server2, sharedName2, domain2, path2,
-                  userId2, password2));
+                  gralSmbUser, gralSmbPassword));
          }
 
-         if (!isEmpty(server3) && !isEmpty(sharedName3) && !isEmpty(userId3)
-               && !isEmpty(password3))
+         if (!isEmpty(server3) && !isEmpty(sharedName3) && !isEmpty(gralSmbUser)
+               && !isEmpty(gralSmbPassword))
          {
             Activator.getLog().info("ENTRA A SETEAR SERVER 3");
             lstServer.add(new InfoServer(server3, sharedName3, domain3, path3,
-                  userId1, password3));
+                  gralSmbUser, gralSmbPassword));
          }
 
          InfoServer infoServer = new InfoServer(Activator.getLog());
          infoServer.verificarConexiones(lstServer, smbClientService);
          String msgServer = "";
 
-         for (int i = 0; i < lstServer.size(); i++)
+         if (lstServer.size() > 0)
          {
-
-            InfoServer server = ((InfoServer) lstServer.get(i));
-
-            if (server.getClient() == null)
+            for (int i = 0; i < lstServer.size(); i++)
             {
-               msgServer += " No se ha podido conectar con el servidor: "
-                     + (i + 1) + "\n";
+
+               InfoServer server = ((InfoServer) lstServer.get(i));
+
+               if (server.getClient() == null)
+               {
+                  msgServer += " No se ha podido conectar con el servidor: "
+                        + (i + 1) + "\n";
+                  break;
+               }
             }
+         }
+         else
+         {
+            msgServer += " No se ha podido conectar con ningún servidor.";
          }
 
          if (msgServer.length() > 0)
@@ -1045,6 +1064,16 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          String userIdLog = (String) settings.get("settings.network.user");
          String passwordLog = (String) settings
                .get("settings.network.password");
+
+         if (gralSmbUser == "")
+         {
+            gralSmbUser = userIdLog;
+         }
+
+         if (gralSmbPassword == "")
+         {
+            gralSmbPassword = passwordLog;
+         }
 
          if (!isEmpty(serverLog) && !isEmpty(sharedNameLog)
                && !isEmpty(userIdLog) && !isEmpty(passwordLog))
