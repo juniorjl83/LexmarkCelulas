@@ -490,6 +490,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             Activator.getLog()
                   .info("cantidad servidores:: " + lstServers.size());
             infoServer.verificarConexiones(lstServers, smbClientService);
+            Activator.getLog()
+            .info("cantidad servidores despues de verificar:: " + lstServers.size());
             String logServer = logServerReturn(lstServers);
             Activator.getLog().info("Servers:" + logServer);
 

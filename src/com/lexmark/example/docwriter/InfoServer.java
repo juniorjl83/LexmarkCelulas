@@ -205,7 +205,8 @@ public class InfoServer
          }
          validaNServer++;
       }
-      lstServers = lstServersTmp;
+      lstServers.clear();
+      lstServers.addAll(lstServersTmp);
    }
 
    public String toString()
