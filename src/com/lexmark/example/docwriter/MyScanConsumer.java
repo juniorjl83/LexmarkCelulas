@@ -64,7 +64,7 @@ public class MyScanConsumer implements ScanConsumer
             
             currentImage = imageFactory.newImage(is);
             
-            if(!currentImage.isBlank(80)){
+            if(!currentImage.isBlank(180)){
             
                File file = new File(disk.getRootPath(), "scan" + n + ".tif");
                TiffImageWriter jw = new TiffImageWriter(TiffImageWriter.G4, TiffImageWriter.OVERWRITE);
@@ -84,8 +84,9 @@ public class MyScanConsumer implements ScanConsumer
          // TODO: we could kill off the doc writer and delete anything it may have
          // written, since it would just be a partial file
          Activator.getLog().info("Problem creating document", e);
-         if(memoryManager.getNativeMem() != null) memoryManager.releaseMemory();
          cleanUpOldFiles();
+         if(memoryManager.getNativeMem() != null) memoryManager.releaseMemory();
+         
       }
       finally
       {

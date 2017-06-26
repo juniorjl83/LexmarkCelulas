@@ -7,8 +7,10 @@ public class MemoryManagerInstance
 {
    private NativeMemory nativeMem = null;
    private MemoryManager memoryManager = null;
-   
-   public MemoryManagerInstance(NativeMemory nativeMem, MemoryManager memoryManager){
+
+   public MemoryManagerInstance(NativeMemory nativeMem,
+         MemoryManager memoryManager)
+   {
       this.nativeMem = nativeMem;
       this.memoryManager = memoryManager;
    }
@@ -32,12 +34,21 @@ public class MemoryManagerInstance
    {
       this.memoryManager = memoryManager;
    }
-   
-   public void releaseMemory(){
-      if (nativeMem != null && memoryManager != null){
-         Activator.getLog().info("liberando memoria!");
-         memoryManager.freeMemory(nativeMem);
+
+   public void releaseMemory()
+   {
+      try
+      {
+         if (nativeMem != null && memoryManager != null)
+         {
+            Activator.getLog().info("liberando memoria!");
+            memoryManager.freeMemory(nativeMem);
+         }
       }
-         
+      catch (Exception e)
+      {
+         Activator.getLog().info("Error liberando memoria! " + e.getMessage());
+      }
+
    }
 }

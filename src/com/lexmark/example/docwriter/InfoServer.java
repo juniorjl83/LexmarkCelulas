@@ -182,7 +182,7 @@ public class InfoServer
          }
 
          configBuilder.setShare(infoServer.instanceSharedName);
-         //configBuilder.setPath(infoServer.instancePath);
+         configBuilder.setPath(infoServer.instancePath);
          configBuilder.setUserId(infoServer.instanceUserId);
          configBuilder.setPassword(infoServer.getInstancePassword());
          
@@ -191,7 +191,8 @@ public class InfoServer
             client = smbClientService.getNewSmbClient(configBuilder.build());
             client.connect();
             activator.info("List Path " + infoServer.getInstancePath());
-            client.listFiles(infoServer.getInstancePath());
+            client.listFiles("");
+            activator.info("Listo correctamente");
             infoServer.setClient(client);
             lstServersTmp.add(infoServer);
          }

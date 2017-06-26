@@ -406,7 +406,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          if (memoryManager != null)
          {
             Activator.getLog().info("entra a reserva de memoria");
-            nativeMem = memoryManager.reserveNativeMemory(50000000);
+            nativeMem = memoryManager.reserveNativeMemory(30000000);
 
          }
          memoryManagerInstance = new MemoryManagerInstance(nativeMem,
