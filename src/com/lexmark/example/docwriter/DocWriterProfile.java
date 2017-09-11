@@ -474,9 +474,9 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             {
                inputPrompt.setValue(idDocumento);
                inputPrompt.setLabel(
-                     "Ingrese identificador de la digitalización (3-15 caracteres):");
+                     "Ingrese identificador de la digitalización (3-70 caracteres):");
                inputPrompt.setMinLength(3);
-               inputPrompt.setMaxLength(15);
+               inputPrompt.setMaxLength(70);
                context.displayPrompt(inputPrompt);
                idDocumento = inputPrompt.getValue();
             }
@@ -497,7 +497,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
             String sucursal = (String) ourAppSettings.get("settings.sucursal")
                   .getCurrentValue();
-            String fileName = sucursal + "-" + idDocumento;
+            String fileName = sucursal + "_" + idDocumento;
 
             SettingDefinition instanceIsFileFormat = instance
                   .get("settings.isFileFormat");

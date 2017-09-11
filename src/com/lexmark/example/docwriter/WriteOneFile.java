@@ -27,11 +27,11 @@ public class WriteOneFile extends Thread
    private Boolean isFinish = Boolean.FALSE;
    private MemoryManagerInstance memoryManager;
    private boolean isLastFile = false;
-   
-   
-   public WriteOneFile(DocumentWriter dw, ImageFactory imageFactory, AppLogRef log,
-         SmbClient client, int fileFormat, String fileName, String filePassword, ArrayList lstImages,
-         Boolean isDateMark, MemoryManagerInstance memoryManager, boolean isLastFile)
+
+   public WriteOneFile(DocumentWriter dw, ImageFactory imageFactory,
+         AppLogRef log, SmbClient client, int fileFormat, String fileName,
+         String filePassword, ArrayList lstImages, Boolean isDateMark,
+         MemoryManagerInstance memoryManager, boolean isLastFile)
    {
       super();
       this.dw = dw;
@@ -49,50 +49,50 @@ public class WriteOneFile extends Thread
 
    public void run()
    {
-      dw.setConsumer(new FileShareHandler(client, fileFormat, fileName, isDateMark));
-      //dw.setCompression(Constants.eZLIB);
-      
-      if ( fileFormat == Constants.e_SECURE_PDF ){
+      dw.setConsumer(
+            new FileShareHandler(client, fileFormat, fileName, isDateMark));
+      // dw.setCompression(Constants.eZLIB);
+
+      if (fileFormat == Constants.e_SECURE_PDF)
+      {
          dw.setPassword(filePassword, 2);
       }
-      /*if (fileFormat == Constants.e_SECURE_PDF ||
-            fileFormat == Constants.e_PDF ){
-         log.info("antes de compression");
-         dw.setCompression(Constants.eZLIB);
-         log.info("despues de compression");
-      }*/
-      Image img = null;   
+      Image img = null;
       try
       {
-         for(int i = 0; i < lstImages.size(); i++)
-         {  
-               log.info("lee imagen: " + i);
-   
-               File file = (File)lstImages.get(i);
-               img = imageFactory.newImage(file);
-               dw.write(img);
-               log.info("escribe imagen: " + i + " en one file");
-               img.freeResources();
-               img = null;
-               
-               if ( isLastFile && file != null ){
-                  file.delete();
-               }
+         for (int i = 0; i < lstImages.size(); i++)
+         {
+            log.info("lee imagen: " + i);
+
+            File file = (File) lstImages.get(i);
+            img = imageFactory.newImage(file);
+            dw.write(img);
+            log.info("escribe imagen: " + i + " en one file");
+            img.freeResources();
+            img = null;
+
+            if (isLastFile && file != null)
+            {
+               file.delete();
+            }
          }
       }
       catch (Exception e)
       {
          log.info("error WriteOneFile: " + e.getMessage());
-      }finally{
+      }
+      finally
+      {
          dw.close();
-         if(img != null){
+         if (img != null)
+         {
             img.freeResources();
             img = null;
          }
-         if(memoryManager.getNativeMem() != null && isLastFile) memoryManager.releaseMemory();
+         if (memoryManager.getNativeMem() != null && isLastFile)
+            memoryManager.releaseMemory();
       }
-      
-      
+
       isFinish = Boolean.TRUE;
       log.info("finaliza hilo: " + this);
    }
@@ -101,5 +101,5 @@ public class WriteOneFile extends Thread
    {
       return isFinish;
    }
-   
+
 }

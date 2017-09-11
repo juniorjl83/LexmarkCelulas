@@ -49,7 +49,7 @@ public class WriteMultipleFiles extends Thread
       if (isDateMark.booleanValue())
       {
          log.info("entra marca fecha");
-         dateMark = dateMark + "-";
+         dateMark = dateMark + "_";
          SimpleDateFormat sdf = new SimpleDateFormat("MMddyyHHmmss");
          Date date = new Date();
          dateMark = dateMark + sdf.format(date);
@@ -65,7 +65,7 @@ public class WriteMultipleFiles extends Thread
             log.info("lee imagen: " + i);
 
             OutputStream os = client.getOutputStream("",
-                  fileName + dateMark + "-" + i + ext);
+                  fileName + dateMark + "_" + i + ext);
             JpegImageWriter jw = new JpegImageWriter(80, true);
             img.write(os, jw);
             log.info("escribe imagen: " + i);
