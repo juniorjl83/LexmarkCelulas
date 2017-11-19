@@ -9,6 +9,7 @@ public class Log
    private String nameDocument;
    private String fileType;
    private int numSheets;
+   private int numBlank;
 
    public Log()
    {
@@ -20,11 +21,12 @@ public class Log
       nameCelula = "";
       nameDocument = "";
       fileType = "";
-      numSheets=0;
+      numSheets = 0;
+      numBlank = 0;
    }
 
    public Log(String serial, String path, String date, String nameCelula,
-         String nameDocument, String fileType, int numSheets)
+         String nameDocument, String fileType, int numSheets, int numBlank)
    {
       super();
       this.serial = serial;
@@ -34,6 +36,7 @@ public class Log
       this.nameDocument = nameDocument;
       this.fileType = fileType;
       this.numSheets = numSheets;
+      this.numBlank = numBlank;
    }
 
    public String getSerial()
@@ -106,6 +109,16 @@ public class Log
       this.numSheets = numSheets;
    }
 
+   public int getNumBlank()
+   {
+      return numBlank;
+   }
+
+   public void setNumBlank(int numBlank)
+   {
+      this.numBlank = numBlank;
+   }
+
    public String toString()
    {
       StringBuffer builder = new StringBuffer();
@@ -122,10 +135,10 @@ public class Log
       builder.append(numSheets);
       builder.append(",");
       builder.append(fileType);
-      
+      builder.append(",");
+      builder.append(numBlank);
+
       return builder.toString();
    }
-   
-   
-   
+
 }

@@ -43,7 +43,7 @@ public class WriteMultipleFiles extends Thread
       this.isLastFile = isLastFile;
    }
 
-   public void run()
+   public synchronized void run()
    {
       String dateMark = "";
       if (isDateMark.booleanValue())
@@ -60,23 +60,32 @@ public class WriteMultipleFiles extends Thread
       {
          for (int i = 0; i < lstImages.size(); i++)
          {
-            File file = (File) lstImages.get(i);
-            img = imageFactory.newImage(file);
-            log.info("lee imagen: " + i);
+            try
+            {
+               File file = (File) lstImages.get(i);
+               log.info("lee imagen: " + file.getName());
+               img = imageFactory.newImage(file);
 
-            OutputStream os = client.getOutputStream("",
-                  fileName + dateMark + "_" + i + ext);
-            JpegImageWriter jw = new JpegImageWriter(80, true);
-            img.write(os, jw);
-            log.info("escribe imagen: " + i);
-            os.close();
-            os = null;
-            if(img != null){
-               img.freeResources();
-               img = null;   
+               OutputStream os = client.getOutputStream("",
+                     fileName + dateMark + "_" + i + ext);
+               JpegImageWriter jw = new JpegImageWriter(80, true);
+               img.write(os, jw);
+               log.info("escribe imagen: " + i);
+               os.close();
+               os = null;
+               if (img != null)
+               {
+                  img.freeResources();
+                  img = null;
+               }
+               if (isLastFile && file != null)
+               {
+                  file.delete();
+               }
             }
-            if ( isLastFile && file != null ){
-               file.delete();
+            catch (Exception e)
+            {
+               log.info("error WriteMultipleOneFile: " + e.getMessage());
             }
          }
 
@@ -86,12 +95,16 @@ public class WriteMultipleFiles extends Thread
       catch (Exception e)
       {
          log.info("error WriteMultipleOneFile: " + e.getMessage());
-      }finally{
-         if(img != null){
+      }
+      finally
+      {
+         if (img != null)
+         {
             img.freeResources();
             img = null;
          }
-         if(memoryManager.getNativeMem() != null && isLastFile) memoryManager.releaseMemory();
+         if (memoryManager.getNativeMem() != null && isLastFile)
+            memoryManager.releaseMemory();
       }
    }
 

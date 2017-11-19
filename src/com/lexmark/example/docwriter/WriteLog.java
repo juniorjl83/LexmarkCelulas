@@ -33,7 +33,7 @@ public class WriteLog extends Thread
       this.line = line;
    }
 
-   public void run()
+   public synchronized void run()
    {
       log.info("entra escribir log");
       SimpleDateFormat faa = new SimpleDateFormat("yy");

@@ -28,6 +28,7 @@ public class MyScanConsumer implements ScanConsumer
    private boolean isFinished = false;
    private Object synch = new Object();
    private MemoryManagerInstance memoryManager;
+   private int numBlank = 0;
    
    public ArrayList imagesOnDisk = new ArrayList();
    
@@ -44,6 +45,7 @@ public class MyScanConsumer implements ScanConsumer
       this.imageFactory = imageFactory;
       this.disk = disk;
       this.memoryManager = memoryManager;
+      numBlank = 0;
    }
 
    /* (non-Javadoc)
@@ -55,6 +57,7 @@ public class MyScanConsumer implements ScanConsumer
       InputStream is = null;
       Image currentImage = null;
       int n = 0;
+      numBlank = 0;
       try
       {
          while((is = data.nextImageFile()) != null)
@@ -76,6 +79,8 @@ public class MyScanConsumer implements ScanConsumer
                currentImage.freeResources();
                currentImage = null;
                
+            }else{
+               numBlank++;
             }
          }
       }
@@ -96,6 +101,8 @@ public class MyScanConsumer implements ScanConsumer
       
       // This will notify anyone who has called waitForComplete that we're finished processing.
       Activator.getLog().info("MyScanConsumer.consume: Done consuming! ");
+      Activator.getLog().info("Cantidad Imagenes en Blanco:::: " + numBlank);
+      
       synchronized(synch)
       {
          isFinished = true;
@@ -138,5 +145,9 @@ public class MyScanConsumer implements ScanConsumer
          File fileToDelete = new File(root, files[i]);
          fileToDelete.delete();
       }
+   }
+   
+   public int getNumBlank(){
+      return numBlank;
    }
 }

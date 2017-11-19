@@ -73,7 +73,6 @@ public class InfoServer
       activator.info("instanceDomain"+numServer + " - " + instanceDomain);
       activator.info("instancePath"+numServer + " - " + instancePath);
       activator.info("instanceUserId"+numServer + " - " + instanceUserId);
-      activator.info("instancePassword"+numServer + " - " + instancePassword);
       
       if ( !isEmpty(instanceServer) && !isEmpty(instanceSharedName) &&
             !isEmpty(instanceUserId) && !isEmpty(instancePassword)){

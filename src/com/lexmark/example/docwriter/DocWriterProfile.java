@@ -569,7 +569,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   WaitMessagePrompt wmp = (WaitMessagePrompt) context
                         .getPromptFactory().newPrompt(WaitMessagePrompt.ID);
 
-                  getlineLog(instance, lstServers, idDocumento, fileType);
+                  getlineLog(instance, lstServers, idDocumento, fileType, myConsumer.getNumBlank());
 
                   // This guy does all of the work
 
@@ -652,7 +652,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    }
 
    private void getlineLog(SettingDefinitionMap instance, ArrayList lstServers,
-         String idDocumento, String fileType)
+         String idDocumento, String fileType, int numBlank)
    {
       StringBuffer line = new StringBuffer("");
       String serialNumber = characteristicsService.get("serialNumber");
@@ -668,6 +668,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       lineLog.setNameCelula(celula);
       lineLog.setNameDocument(idDocumento);
       lineLog.setFileType(fileType);
+      lineLog.setNumBlank(numBlank);
 
    }
 

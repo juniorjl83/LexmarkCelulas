@@ -47,7 +47,7 @@ public class WriteOneFile extends Thread
       this.isLastFile = isLastFile;
    }
 
-   public void run()
+   public synchronized void run()
    {
       dw.setConsumer(
             new FileShareHandler(client, fileFormat, fileName, isDateMark));
@@ -62,18 +62,24 @@ public class WriteOneFile extends Thread
       {
          for (int i = 0; i < lstImages.size(); i++)
          {
-            log.info("lee imagen: " + i);
-
-            File file = (File) lstImages.get(i);
-            img = imageFactory.newImage(file);
-            dw.write(img);
-            log.info("escribe imagen: " + i + " en one file");
-            img.freeResources();
-            img = null;
-
-            if (isLastFile && file != null)
+            try
             {
-               file.delete();
+               File file = (File) lstImages.get(i);
+               log.info("lee imagen: " + file.getName());
+               img = imageFactory.newImage(file);
+               dw.write(img);
+               log.info("escribe imagen: " + i + " en one file");
+               img.freeResources();
+               img = null;
+
+               if (isLastFile && file != null)
+               {
+                  file.delete();
+               }
+            }
+            catch (Exception e)
+            {
+               log.info("error WriteMultipleOneFile: " + e.getMessage());
             }
          }
       }
