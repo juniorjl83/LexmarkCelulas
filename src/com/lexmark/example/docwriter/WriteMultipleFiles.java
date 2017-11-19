@@ -10,6 +10,7 @@ import java.util.Date;
 import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageFactory;
 import com.lexmark.prtapp.image.JpegImageWriter;
+import com.lexmark.prtapp.image.TiffImageWriter;
 import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.smbclient.SmbClient;
 import com.lexmark.prtapp.util.AppLogRef;
@@ -68,7 +69,7 @@ public class WriteMultipleFiles extends Thread
 
                OutputStream os = client.getOutputStream("",
                      fileName + dateMark + "_" + i + ext);
-               JpegImageWriter jw = new JpegImageWriter(80, true);
+               TiffImageWriter jw = new TiffImageWriter(TiffImageWriter.G4, TiffImageWriter.OVERWRITE);
                img.write(os, jw);
                log.info("escribe imagen: " + i);
                os.close();

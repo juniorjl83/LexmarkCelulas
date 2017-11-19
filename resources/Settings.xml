@@ -42,6 +42,10 @@
 			<description value="settings.sucursal.description" />
 			<length min="1" max="50" />
 		</element>
+		<element name="settings.email" type="String">
+			<description value="settings.email.description" />
+			<length min="1" max="1000" />
+		</element>
 		<layout>
 			<group title="appsetting.title">
 				<settingref name="settings.icon.text" />
@@ -54,6 +58,7 @@
 			<group title="log.title">
 				<description value="log.description" />
 				<settingref name="settings.sucursal" />
+				<settingref name="settings.email" />
 				<settingref name="settings.log.promptName" />
 				<settingref name="settings.log.server" />
 				<settingref name="settings.log.shareName" />

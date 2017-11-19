@@ -2,20 +2,20 @@ package com.lexmark.example.docwriter;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import com.lexmark.prtapp.email.EmailConsts;
+import com.lexmark.prtapp.email.EmailMessage;
+import com.lexmark.prtapp.email.EmailService;
 
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -27,9 +27,7 @@ import com.lexmark.core.IntegerElem;
 import com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService;
 import com.lexmark.prtapp.image.DocumentWriter;
 import com.lexmark.prtapp.image.DocumentWriterFactory;
-import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageFactory;
-import com.lexmark.prtapp.image.JpegImageWriter;
 import com.lexmark.prtapp.memoryManager.MemoryException;
 import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.memoryManager.NativeMemory;
@@ -38,7 +36,6 @@ import com.lexmark.prtapp.profile.PrtappProfile;
 import com.lexmark.prtapp.profile.PrtappProfileException;
 import com.lexmark.prtapp.profile.WelcomeScreenable;
 import com.lexmark.prtapp.prompt.PromptException;
-import com.lexmark.prtapp.prompt.PromptFactoryException;
 import com.lexmark.prtapp.settings.SettingDefinition;
 import com.lexmark.prtapp.settings.SettingDefinitionMap;
 import com.lexmark.prtapp.settings.SettingsAdmin;
@@ -49,6 +46,7 @@ import com.lexmark.prtapp.smbclient.SmbClient;
 import com.lexmark.prtapp.smbclient.SmbClientException;
 import com.lexmark.prtapp.smbclient.SmbClientService;
 import com.lexmark.prtapp.smbclient.SmbConfig.ConfigBuilder;
+import com.lexmark.prtapp.std.prompts.BooleanPrompt;
 import com.lexmark.prtapp.std.prompts.ComboPrompt;
 import com.lexmark.prtapp.std.prompts.MessagePrompt;
 import com.lexmark.prtapp.std.prompts.StringPrompt;
@@ -72,6 +70,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       Lifecycle, ManagedService, RequiredSettingValidator
 {
    private DocumentWriterFactory docWriterFactory = null;
+   private EmailService emailService = null;
    private StorageDevice disk = null;
    private ImageFactory imageFactory = null;
    private MemoryManager memoryManager = null;
@@ -87,6 +86,9 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    private ServiceBinderContext sbc = null;
    private String gralSmbUser = "";
    private String gralSmbPassword = "";
+   private String emailNotificacion = "";
+   private String sucursal = "";
+   private String serialNumber = "";
 
    private DeviceCharacteristicsService characteristicsService = null;
    Log lineLog = new Log();
@@ -324,6 +326,22 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    {
       docWriterFactory = null;
    }
+   
+   /**
+    * Called when the e-mail service arrives.
+    */
+   public void addEmailService(EmailService svc)
+   {
+      emailService = svc;
+   }
+   
+   /**
+    * Called when the e-mail service goes away.
+    */
+   public void removeEmailService(EmailService svc)
+   {
+      emailService = null;
+   }
 
    public void addImageFactory(ImageFactory svc)
    {
@@ -395,12 +413,13 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    {
       NativeMemory nativeMem = null;
       MemoryManagerInstance memoryManagerInstance = null;
+      int noMemoryErros = 0;
       isMultiTiff = Boolean.FALSE;
       try
       {
          if (verifyOldFiles())
          {
-
+            noMemoryErros++;
             throw new MemoryException(1000);
          }
          if (memoryManager != null)
@@ -495,10 +514,13 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             String logServer = logServerReturn(lstServers);
             Activator.getLog().info("Servers:" + logServer);
 
-            String sucursal = (String) ourAppSettings.get("settings.sucursal")
+            sucursal = (String) ourAppSettings.get("settings.sucursal")
                   .getCurrentValue();
             String fileName = sucursal + "_" + idDocumento;
 
+            emailNotificacion = (String) ourAppSettings.get("settings.email")
+                  .getCurrentValue();
+            
             SettingDefinition instanceIsFileFormat = instance
                   .get("settings.isFileFormat");
             Boolean isFileFormat = (Boolean) instanceIsFileFormat
@@ -619,14 +641,31 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       }
       catch (MemoryException e)
       {
-         MessagePrompt noInstances;
          try
          {
-            noInstances = (MessagePrompt) context.getPromptFactory()
-                  .newPrompt(MessagePrompt.ID);
-            noInstances.setMessage(
-                  "No es posible ingresar mientra se procesa el anterior trabajo. Intente mas tarde!");
-            context.displayPrompt(noInstances);
+            if (noMemoryErros > 2){
+               noMemoryErros = 0;
+               sendEmail(context);
+            }
+            
+            BooleanPrompt boolPrompt = (BooleanPrompt)context.getPromptFactory()
+                  .newPrompt(BooleanPrompt.ID);
+            boolPrompt.setName("Procesando trabajo...");
+            boolPrompt.setLabel("Procesando trabajo...\n No es posible ingresar mientras se procesa el anterio trabajo. \n "
+                  + "Desea cancelar el trabajo?");
+            boolPrompt.setValue(false);
+            context.displayPrompt(boolPrompt);
+            boolean cancelWork = boolPrompt.getValue();
+            
+            if ( cancelWork ){
+               Activator.getLog()
+               .info("Borra imagenes en memoria");
+               cleanUpOldFiles();
+            }else{
+               Activator.getLog()
+               .info("No Borra imagenes en memoria");
+            }
+
          }
          catch (Exception e1)
          {
@@ -651,11 +690,39 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       }
    }
 
+   private void sendEmail(BasicProfileContext context)
+   {
+      try {
+         if(emailService == null)
+         {
+            Activator.getLog().info("MailService - Servicio envio correo no disponible.");
+         }
+         else
+         {
+            EmailMessage emailMessage = emailService.newEmailMessage(emailNotificacion, "Celulas 2 - Error de memoria sucursal " + sucursal,
+                  "Dirección MAC: " + serialNumber);
+            boolean success = emailService.send(emailMessage) == EmailConsts.ERR_SUCCESS;
+            
+            if(success)
+            {
+               Activator.getLog().info("MailService - Correo enviado satisfatoriamente");
+            }
+            else
+            {
+               Activator.getLog().info("MailService - Error Email no enviado");
+            }
+         }
+      }catch (Exception e)
+      {
+         Activator.getLog().info("MailService - Exception - " + e.getMessage());
+      }
+   }
+
    private void getlineLog(SettingDefinitionMap instance, ArrayList lstServers,
          String idDocumento, String fileType, int numBlank)
    {
       StringBuffer line = new StringBuffer("");
-      String serialNumber = characteristicsService.get("serialNumber");
+      serialNumber = characteristicsService.get("serialNumber");
       String celula = (String) instance.get("settings.instanceName")
             .getCurrentValue();
       SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
@@ -775,7 +842,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
     * around after a run so that, for debug purposes, the user can look at the
     * files that were created.
     */
-   private void cleanUpOldFiles()
+   private synchronized void cleanUpOldFiles()
    {
       File root = disk.getRootPath();
       String[] files = root.list();
