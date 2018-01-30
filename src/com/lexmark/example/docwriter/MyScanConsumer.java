@@ -3,12 +3,15 @@ package com.lexmark.example.docwriter;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.lexmark.example.docwriter.singleton.Id;
+import com.lexmark.example.docwriter.singleton.Trabajo;
 import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageFactory;
-import com.lexmark.prtapp.image.JpegImageWriter;
 import com.lexmark.prtapp.image.TiffImageWriter;
-import com.lexmark.prtapp.image.TiffImageWriter.TiffCompression;
 import com.lexmark.prtapp.scan.ScanConsumer;
 import com.lexmark.prtapp.scan.ScanData;
 import com.lexmark.prtapp.storagedevice.StorageDevice;
@@ -29,23 +32,29 @@ public class MyScanConsumer implements ScanConsumer
    private Object synch = new Object();
    private MemoryManagerInstance memoryManager;
    private int numBlank = 0;
-   
-   public ArrayList imagesOnDisk = new ArrayList();
+   private String filename;
+   private String fileType;
+   private String filePassword;
+   private List images;
    
    /**
     * Constructor.
     * @param imageFactory Used in the consume method to create an Image for each
     * scan file.
+    * @param fileName 
     * @param memoryManagerInstance 
     * @param docWriterFactory Used in the consume method to create the document (PDF)
     * from the image files.
     */
-   public MyScanConsumer(ImageFactory imageFactory, StorageDevice disk, MemoryManagerInstance memoryManager)
+   public MyScanConsumer(ImageFactory imageFactory, StorageDevice disk, MemoryManagerInstance memoryManager, 
+         String filename, String fileType, String filePassword)
    {
       this.imageFactory = imageFactory;
       this.disk = disk;
       this.memoryManager = memoryManager;
-      numBlank = 0;
+      this.filename = filename;
+      this.fileType = fileType;
+      this.filePassword = filePassword;
    }
 
    /* (non-Javadoc)
@@ -53,11 +62,14 @@ public class MyScanConsumer implements ScanConsumer
     */
    public void consume(ScanData data)
    {
+      numBlank = 0;
+      images = new ArrayList();
       isFinished = false;
       InputStream is = null;
       Image currentImage = null;
       int n = 0;
       numBlank = 0;
+      Map imagesOnDisk = Trabajo.getInstance();
       try
       {
          while((is = data.nextImageFile()) != null)
@@ -72,7 +84,7 @@ public class MyScanConsumer implements ScanConsumer
                File file = new File(disk.getRootPath(), "scan" + n + ".tif");
                TiffImageWriter jw = new TiffImageWriter(TiffImageWriter.G4, TiffImageWriter.OVERWRITE);
                currentImage.write(file, jw);
-               imagesOnDisk.add(file);
+               images.add(file);
 
                Activator.getLog().info("MyScanConsumer.consume: saved image as a tiff here: " + file);
 
@@ -83,6 +95,7 @@ public class MyScanConsumer implements ScanConsumer
                numBlank++;
             }
          }
+         imagesOnDisk.put(new Id(imagesOnDisk.size(), filename, filePassword, fileType), images);
       }
       catch(Exception e)
       {

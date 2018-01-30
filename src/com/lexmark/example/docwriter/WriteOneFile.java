@@ -3,7 +3,10 @@ package com.lexmark.example.docwriter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
+import com.lexmark.example.docwriter.singleton.Id;
+import com.lexmark.example.docwriter.singleton.Trabajo;
 import com.lexmark.prtapp.image.DocumentWriter;
 import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageException;
@@ -19,7 +22,6 @@ public class WriteOneFile extends Thread
    private ImageFactory imageFactory;
    private SmbClient client = null;
    private int fileFormat;
-   private String fileName = null;
    private String filePassword;
    private ArrayList lstImages = null;
    private Boolean isDateMark;
@@ -27,11 +29,12 @@ public class WriteOneFile extends Thread
    private Boolean isFinish = Boolean.FALSE;
    private MemoryManagerInstance memoryManager;
    private boolean isLastFile = false;
+   private Id id;
 
    public WriteOneFile(DocumentWriter dw, ImageFactory imageFactory,
-         AppLogRef log, SmbClient client, int fileFormat, String fileName,
+         AppLogRef log, SmbClient client, int fileFormat,
          String filePassword, ArrayList lstImages, Boolean isDateMark,
-         MemoryManagerInstance memoryManager, boolean isLastFile)
+         MemoryManagerInstance memoryManager, boolean isLastFile, Id id)
    {
       super();
       this.dw = dw;
@@ -39,18 +42,18 @@ public class WriteOneFile extends Thread
       this.log = log;
       this.client = client;
       this.fileFormat = fileFormat;
-      this.fileName = fileName;
       this.filePassword = filePassword;
       this.lstImages = lstImages;
       this.isDateMark = isDateMark;
       this.memoryManager = memoryManager;
       this.isLastFile = isLastFile;
+      this.id = id;
    }
 
    public synchronized void run()
    {
       dw.setConsumer(
-            new FileShareHandler(client, fileFormat, fileName, isDateMark));
+            new FileShareHandler(client, fileFormat, id.getFilename(), isDateMark));
       // dw.setCompression(Constants.eZLIB);
 
       if (fileFormat == Constants.e_SECURE_PDF)
@@ -79,7 +82,7 @@ public class WriteOneFile extends Thread
             }
             catch (Exception e)
             {
-               log.info("error WriteMultipleOneFile: " + e.getMessage());
+               log.info("error WriteOneFile: " + e.getMessage());
             }
          }
       }
@@ -100,7 +103,12 @@ public class WriteOneFile extends Thread
       }
 
       isFinish = Boolean.TRUE;
-      log.info("finaliza hilo: " + this);
+      log.info("finaliza write one file hilo: " + this);
+      Map imagesOnDisk = Trabajo.getInstance();
+      log.info("trabajos en memoria: " + imagesOnDisk.size());
+      log.info("Borrando imagenes de memoria: " + this);
+      imagesOnDisk.remove(id);
+      log.info("trabajos en memoria: " + imagesOnDisk.size());   
    }
 
    public Boolean isFinish()

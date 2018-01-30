@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import com.lexmark.prtapp.email.EmailConsts;
@@ -24,6 +25,8 @@ import org.ungoverned.gravity.servicebinder.Lifecycle;
 import org.ungoverned.gravity.servicebinder.ServiceBinderContext;
 
 import com.lexmark.core.IntegerElem;
+import com.lexmark.example.docwriter.singleton.Id;
+import com.lexmark.example.docwriter.singleton.Trabajo;
 import com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService;
 import com.lexmark.prtapp.image.DocumentWriter;
 import com.lexmark.prtapp.image.DocumentWriterFactory;
@@ -100,12 +103,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
     */
    public class MyStoppable implements Stoppable
    {
-      ArrayList fileNames = null;
       MyScanConsumer myConsumer = null;
-      String fileName;
       ArrayList lstServers;
-      String fileType;
-      String filePassword;
       BasicProfileContext context;
       MemoryManagerInstance memoryManager;
 
@@ -125,16 +124,11 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
        *           if this image color or not? We need this to determine the
        *           appropriate PDF compression
        */
-      public MyStoppable(MyScanConsumer myConsumer, String fileName,
-            ArrayList lstServers, String fileType, String filePassword,
+      public MyStoppable(MyScanConsumer myConsumer, ArrayList lstServers, 
             BasicProfileContext context, MemoryManagerInstance memoryManager)
       {
          this.myConsumer = myConsumer;
-         this.fileNames = myConsumer.imagesOnDisk;
-         this.fileName = fileName;
          this.lstServers = lstServers;
-         this.fileType = fileType;
-         this.filePassword = filePassword;
          this.context = context;
          this.memoryManager = memoryManager;
       }
@@ -144,121 +138,112 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
        * 
        * @see com.lexmark.prtapp.std.prompts.WaitPrompt.Stoppable#run()
        */
-      public void run()
+      public synchronized void run()
       {
 
          Activator.getLog().info("entra run stopable");
          myConsumer.waitForComplete();
-
-         ArrayList lstThreads = new ArrayList();
-
-         boolean isLastFile = false;
-         for (int j = 0; j < lstServers.size(); j++)
-         {
-
-            if ((j + 1) == lstServers.size())
+         Map imagesOnDisk = Trabajo.getInstance();
+         Iterator it = imagesOnDisk.entrySet().iterator();
+         while (it.hasNext()){
+            boolean isLastFile = false;
+            Map.Entry entry = (Map.Entry)it.next();
+            Id id = (Id)entry.getKey();
+            ArrayList fileNames = (ArrayList)entry.getValue();
+            String fileName = id.getFilename();
+            String fileType = id.getFileType();
+            String filePassword = id.getFilePassword();
+            
+            for (int j = 0; j < lstServers.size(); j++)
             {
-               isLastFile = true;
-               Activator.getLog().info("is last file");
-            }
-            SmbClient client = ((InfoServer) lstServers.get(j)).getClient();
+               if ((j + 1) == lstServers.size())
+               {
+                  isLastFile = true;
+                  Activator.getLog().info("is last file");
+               }
+               SmbClient client = ((InfoServer) lstServers.get(j)).getClient();
 
-            if (fileType.equals("JPG"))
+               if (fileType.equals("JPG"))
+               {
+                  Activator.getLog().info("jpg archivo, servidor " + j);
+                  WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
+                        client, fileNames, isDateMark, ".jpg",
+                        Activator.getLog(), memoryManager, isLastFile, id);
+                  mf.start();
+               }
+               else if (isMultiTiff.booleanValue())
+               {
+                  Activator.getLog().info("multitiff archivo, servidor " + j);
+                  WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
+                        client, fileNames, isDateMark, ".tif",
+                        Activator.getLog(), memoryManager, isLastFile, id);
+                  mf.start();
+               }
+               else
+               {
+                  Activator.getLog().info("un archivo, servidor " + j);
+                  int fileFormat = getFileFormat(fileType);
+                  DocumentWriter dw = docWriterFactory
+                        .newDocumentWriter(fileFormat);
+                  WriteOneFile of = new WriteOneFile(dw, imageFactory,
+                        Activator.getLog(), client, fileFormat,
+                        filePassword, fileNames, isDateMark, memoryManager,
+                        isLastFile, id);
+                  of.start();
+               }
+            }
+            Activator.getLog().info("began lg ");
+            SettingDefinitionMap ourAppSettings = settingsAdmin
+                  .getGlobalSettings("celulas");
+            String shareName = (String) ourAppSettings
+                  .get("settings.log.shareName").getCurrentValue();
+            String serverAddress = (String) ourAppSettings
+                  .get("settings.log.server").getCurrentValue();
+            String initialPath = (String) ourAppSettings.get("settings.log.path")
+                  .getCurrentValue();
+            String domainLog = (String) ourAppSettings.get("settings.log.domain")
+                  .getCurrentValue();
+            String userName = (String) ourAppSettings.get("settings.network.user")
+                  .getCurrentValue();
+            String password = (String) ourAppSettings
+                  .get("settings.network.password").getCurrentValue();
+            String logFileName = (String) ourAppSettings
+                  .get("settings.log.promptName").getCurrentValue();
+
+            ConfigBuilder configBuilder = smbClientService.getSmbConfigBuilder();
+            configBuilder.setAuthType(AuthOptions.NTLMv2);
+            configBuilder.setServer(serverAddress);
+            configBuilder.setShare(shareName);
+            configBuilder.setPath(initialPath);
+            configBuilder.setUserId(userName);
+            configBuilder.setPassword(password);
+
+            if (domainLog != null && domainLog.length() > 0)
             {
-               Activator.getLog().info("jpg archivo, servidor " + j);
-               WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
-                     client, fileNames, fileName, isDateMark, ".jpg",
-                     Activator.getLog(), memoryManager, isLastFile);
-               lstThreads.add(mf);
-               mf.start();
+               configBuilder.setDomain(domainLog);
             }
-            else if (isMultiTiff.booleanValue())
+
+            SmbClient clientLog = null;
+            try
             {
-               Activator.getLog().info("multitiff archivo, servidor " + j);
-               WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
-                     client, fileNames, fileName, isDateMark, ".tif",
-                     Activator.getLog(), memoryManager, isLastFile);
-               lstThreads.add(mf);
-               mf.start();
+               clientLog = smbClientService.getNewSmbClient(configBuilder.build());
             }
-            else
+            catch (com.lexmark.prtapp.smbclient.ConfigurationException e)
             {
-               Activator.getLog().info("un archivo, servidor " + j);
-               int fileFormat = getFileFormat(fileType);
-               DocumentWriter dw = docWriterFactory
-                     .newDocumentWriter(fileFormat);
-               WriteOneFile of = new WriteOneFile(dw, imageFactory,
-                     Activator.getLog(), client, fileFormat, fileName,
-                     filePassword, fileNames, isDateMark, memoryManager,
-                     isLastFile);
-               lstThreads.add(of);
-               of.start();
+               Activator.getLog().info("err abre lg ");
+               e.printStackTrace();
             }
+            catch (SmbClientException e)
+            {
+               Activator.getLog().info("err abre lg ");
+               e.printStackTrace();
+            }
+            int numSheets = fileNames.size();
+            lineLog.setNumSheets(numSheets);
+            WriteLog wl = new WriteLog(clientLog, Activator.getLog(), logFileName,
+                  lineLog);
+            wl.start();
          }
-         Activator.getLog().info("began lg ");
-         SettingDefinitionMap ourAppSettings = settingsAdmin
-               .getGlobalSettings("celulas");
-         String shareName = (String) ourAppSettings
-               .get("settings.log.shareName").getCurrentValue();
-         String serverAddress = (String) ourAppSettings
-               .get("settings.log.server").getCurrentValue();
-         String initialPath = (String) ourAppSettings.get("settings.log.path")
-               .getCurrentValue();
-         String domainLog = (String) ourAppSettings.get("settings.log.domain")
-               .getCurrentValue();
-         String userName = (String) ourAppSettings.get("settings.network.user")
-               .getCurrentValue();
-         String password = (String) ourAppSettings
-               .get("settings.network.password").getCurrentValue();
-         String fileName = (String) ourAppSettings
-               .get("settings.log.promptName").getCurrentValue();
-
-         ConfigBuilder configBuilder = smbClientService.getSmbConfigBuilder();
-         configBuilder.setAuthType(AuthOptions.NTLMv2);
-         configBuilder.setServer(serverAddress);
-         configBuilder.setShare(shareName);
-         configBuilder.setPath(initialPath);
-         configBuilder.setUserId(userName);
-         configBuilder.setPassword(password);
-
-         if (domainLog != null && domainLog.length() > 0)
-         {
-            configBuilder.setDomain(domainLog);
-         }
-
-         SmbClient clientLog = null;
-         try
-         {
-            clientLog = smbClientService.getNewSmbClient(configBuilder.build());
-         }
-         catch (com.lexmark.prtapp.smbclient.ConfigurationException e)
-         {
-            Activator.getLog().info("err abre lg ");
-            e.printStackTrace();
-         }
-         catch (SmbClientException e)
-         {
-            Activator.getLog().info("err abre lg ");
-            e.printStackTrace();
-         }
-         int numSheets = fileNames.size();
-         lineLog.setNumSheets(numSheets);
-         WriteLog wl = new WriteLog(clientLog, Activator.getLog(), fileName,
-               lineLog);
-         wl.start();
-         int numThreadFinish;
-
-         /*
-          * do{ numThreadFinish = 0; for ( int i=0; i < lstThreads.size(); i++
-          * ){ if ( fileType.equals("JPG") || isMultiTiff.booleanValue()){ if (
-          * ((WriteMultipleFiles) lstThreads.get(i)).isFinish().booleanValue()
-          * ){ numThreadFinish++; } }else{ if ( ((WriteOneFile)
-          * lstThreads.get(i)).isFinish().booleanValue() ){ numThreadFinish++; }
-          * } }
-          * 
-          * } while (numThreadFinish < lstServers.size());
-          */
-
       }
 
       private int getFileFormat(String fileType)
@@ -463,12 +448,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          {
 
             String[] namesAsArray = (String[]) names.toArray(new String[0]);
-            /*
-             * Arrays.sort(namesAsArray, String.CASE_INSENSITIVE_ORDER);
-             * 
-             * String[] pidsAsArray = (String[]) pids.toArray(new String[0]);
-             * Arrays.sort(pidsAsArray, String.CASE_INSENSITIVE_ORDER);
-             */
 
             ComboPrompt cp = (ComboPrompt) context.getPromptFactory()
                   .newPrompt(ComboPrompt.ID);
@@ -582,7 +561,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   context.displayWorkflow(docWorkflow);
 
                   MyScanConsumer myConsumer = new MyScanConsumer(imageFactory,
-                        disk, memoryManagerInstance);
+                        disk, memoryManagerInstance, fileName, fileType, filePassword);
 
                   docWorkflow.setConsumer(myConsumer);
                   context.startWorkflow(docWorkflow,
@@ -594,11 +573,9 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   getlineLog(instance, lstServers, idDocumento, fileType, myConsumer.getNumBlank());
 
                   // This guy does all of the work
-
                   Activator.getLog().info("antes de estopable");
                   MyStoppable myStoppable = new MyStoppable(myConsumer,
-                        fileName, lstServers, fileType, filePassword, context,
-                        memoryManagerInstance);
+                        lstServers, context, memoryManagerInstance);
 
                   wmp.setWorkerRunnable(myStoppable, "Creación del archivo");
                   wmp.setMessage("Enviando el archivo...");
