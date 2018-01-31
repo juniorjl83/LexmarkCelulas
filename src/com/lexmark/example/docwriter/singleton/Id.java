@@ -83,4 +83,10 @@ public class Id
       if (id != other.id) return false;
       return true;
    }
+
+   public String toString()
+   {
+      return "Id [id=" + id + ", filename=" + filename + ", filePassword="
+            + filePassword + ", fileType=" + fileType + "]";
+   }
 }

@@ -149,11 +149,13 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             boolean isLastFile = false;
             Map.Entry entry = (Map.Entry)it.next();
             Id id = (Id)entry.getKey();
+            Activator.getLog().info("Procesando trabajo..... " + id);
             ArrayList fileNames = (ArrayList)entry.getValue();
             String fileName = id.getFilename();
             String fileType = id.getFileType();
             String filePassword = id.getFilePassword();
             
+            Activator.getLog().info("Archivos en memoria :: " + disk.getRootPath().list().length);
             for (int j = 0; j < lstServers.size(); j++)
             {
                if ((j + 1) == lstServers.size())
@@ -402,11 +404,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       isMultiTiff = Boolean.FALSE;
       try
       {
-         if (verifyOldFiles())
-         {
-            noMemoryErros++;
-            throw new MemoryException(1000);
-         }
          if (memoryManager != null)
          {
             Activator.getLog().info("entra a reserva de memoria");
@@ -551,7 +548,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                try
                {
                   // First, clean up any old files lying around in our directory
-                  cleanUpOldFiles();
+                  //cleanUpOldFiles();
 
                   DocumentWorkflow docWorkflow = (DocumentWorkflow) context
                         .getWorkflowFactory().create(WorkflowFactory.DOCUMENT);
@@ -615,41 +612,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   "No se han configurado los procesos de escaneado!");
             context.displayPrompt(noInstances);
          }
-      }
-      catch (MemoryException e)
-      {
-         try
-         {
-            if (noMemoryErros > 2){
-               noMemoryErros = 0;
-               sendEmail(context);
-            }
-            
-            BooleanPrompt boolPrompt = (BooleanPrompt)context.getPromptFactory()
-                  .newPrompt(BooleanPrompt.ID);
-            boolPrompt.setName("Procesando trabajo...");
-            boolPrompt.setLabel("Procesando trabajo...\n No es posible ingresar mientras se procesa el anterio trabajo. \n "
-                  + "Desea cancelar el trabajo?");
-            boolPrompt.setValue(false);
-            context.displayPrompt(boolPrompt);
-            boolean cancelWork = boolPrompt.getValue();
-            
-            if ( cancelWork ){
-               Activator.getLog()
-               .info("Borra imagenes en memoria");
-               cleanUpOldFiles();
-            }else{
-               Activator.getLog()
-               .info("No Borra imagenes en memoria");
-            }
-
-         }
-         catch (Exception e1)
-         {
-            Activator.getLog()
-                  .info("Prompt stopped Memory manager: " + e.getMessage());
-         }
-
       }
       catch (PromptException e)
       {
@@ -828,17 +790,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          File fileToDelete = new File(root, files[i]);
          fileToDelete.delete();
       }
-   }
-
-   private boolean verifyOldFiles()
-   {
-      File root = disk.getRootPath();
-      String[] files = root.list();
-      if (files.length > 0)
-      {
-         return true;
-      }
-      return false;
    }
 
    public InputStream getDownIcon()
