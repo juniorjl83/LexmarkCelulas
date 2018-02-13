@@ -1,5 +1,6 @@
 package com.lexmark.example.docwriter;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -14,10 +15,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import com.lexmark.prtapp.email.EmailConsts;
-import com.lexmark.prtapp.email.EmailMessage;
-import com.lexmark.prtapp.email.EmailService;
-
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
@@ -31,7 +28,6 @@ import com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService;
 import com.lexmark.prtapp.image.DocumentWriter;
 import com.lexmark.prtapp.image.DocumentWriterFactory;
 import com.lexmark.prtapp.image.ImageFactory;
-import com.lexmark.prtapp.memoryManager.MemoryException;
 import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.memoryManager.NativeMemory;
 import com.lexmark.prtapp.profile.BasicProfileContext;
@@ -49,7 +45,6 @@ import com.lexmark.prtapp.smbclient.SmbClient;
 import com.lexmark.prtapp.smbclient.SmbClientException;
 import com.lexmark.prtapp.smbclient.SmbClientService;
 import com.lexmark.prtapp.smbclient.SmbConfig.ConfigBuilder;
-import com.lexmark.prtapp.std.prompts.BooleanPrompt;
 import com.lexmark.prtapp.std.prompts.ComboPrompt;
 import com.lexmark.prtapp.std.prompts.MessagePrompt;
 import com.lexmark.prtapp.std.prompts.StringPrompt;
@@ -73,7 +68,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       Lifecycle, ManagedService, RequiredSettingValidator
 {
    private DocumentWriterFactory docWriterFactory = null;
-   private EmailService emailService = null;
    private StorageDevice disk = null;
    private ImageFactory imageFactory = null;
    private MemoryManager memoryManager = null;
@@ -82,7 +76,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    private static final String icon = "/celulas22.png";
    private Boolean isMultiTiff = Boolean.FALSE;
    private Boolean isDateMark = Boolean.FALSE;
-
+   private byte[] iconUpImage = null;
    private String iconText = null;
    private ServiceRegistration profileRegistration = null;
    boolean activated = false;
@@ -314,22 +308,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       docWriterFactory = null;
    }
    
-   /**
-    * Called when the e-mail service arrives.
-    */
-   public void addEmailService(EmailService svc)
-   {
-      emailService = svc;
-   }
-   
-   /**
-    * Called when the e-mail service goes away.
-    */
-   public void removeEmailService(EmailService svc)
-   {
-      emailService = null;
-   }
-
    public void addImageFactory(ImageFactory svc)
    {
       imageFactory = svc;
@@ -469,7 +447,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             {
                inputPrompt.setValue(idDocumento);
                inputPrompt.setLabel(
-                     "Ingrese identificador de la digitalización (3-70 caracteres):");
+                     "Por favor digite el número de documento de identificación o radicado de la solicitud (3-70 caracteres):");
                inputPrompt.setMinLength(3);
                inputPrompt.setMaxLength(70);
                context.displayPrompt(inputPrompt);
@@ -629,34 +607,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       }
    }
 
-   private void sendEmail(BasicProfileContext context)
-   {
-      try {
-         if(emailService == null)
-         {
-            Activator.getLog().info("MailService - Servicio envio correo no disponible.");
-         }
-         else
-         {
-            EmailMessage emailMessage = emailService.newEmailMessage(emailNotificacion, "Celulas 2 - Error de memoria sucursal " + sucursal,
-                  "Dirección MAC: " + serialNumber);
-            boolean success = emailService.send(emailMessage) == EmailConsts.ERR_SUCCESS;
-            
-            if(success)
-            {
-               Activator.getLog().info("MailService - Correo enviado satisfatoriamente");
-            }
-            else
-            {
-               Activator.getLog().info("MailService - Error Email no enviado");
-            }
-         }
-      }catch (Exception e)
-      {
-         Activator.getLog().info("MailService - Exception - " + e.getMessage());
-      }
-   }
-
    private void getlineLog(SettingDefinitionMap instance, ArrayList lstServers,
          String idDocumento, String fileType, int numBlank)
    {
@@ -794,8 +744,15 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
    public InputStream getDownIcon()
    {
-      InputStream iconStream = getClass().getResourceAsStream(icon);
-      return iconStream;
+      if(iconUpImage == null || iconUpImage.length == 0)
+      {
+         InputStream iconStream = getClass().getResourceAsStream(icon);
+         return iconStream;
+      }
+      else
+      {
+         return new ByteArrayInputStream(iconUpImage);
+      }
    }
 
    public String getIconText(Locale locale)
@@ -805,8 +762,15 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
    public InputStream getUpIcon()
    {
-      InputStream iconStream = getClass().getResourceAsStream(icon);
-      return iconStream;
+      if(iconUpImage == null || iconUpImage.length == 0)
+      {
+         InputStream iconStream = getClass().getResourceAsStream(icon);
+         return iconStream;
+      }
+      else
+      {
+         return new ByteArrayInputStream(iconUpImage);
+      }
    }
 
    public String getWorkflowOveride()
@@ -898,6 +862,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             {
                iconNeedsUpdate = true;
                iconText = (String) value;
+            }else if(key.equals("settings.icon.image"))
+            {
+               iconNeedsUpdate = true;
+               iconUpImage = (byte[])value;
             }
          }
          if (iconNeedsUpdate) updateIcon();

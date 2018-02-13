@@ -31,9 +31,6 @@
 		<requires service="com.lexmark.prtapp.memoryManager.MemoryManager"
 			filter="" cardinality="0..1" policy="dynamic" bind-method="addMemoryManager"
 			unbind-method="removeMemoryManager" />
-		<requires service="com.lexmark.prtapp.email.EmailService" filter=""
-            cardinality="0..1" policy="dynamic" bind-method="addEmailService"
-            unbind-method="removeEmailService" />
 		<provides service="org.osgi.service.cm.ManagedService" />
 		<provides service="com.lexmark.prtapp.settings.RequiredSettingValidator" />
 	</component>
