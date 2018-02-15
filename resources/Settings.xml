@@ -8,6 +8,10 @@
 			<default value="Celulas 2" />
 			<length min="1" max="50" />
 		</element>
+		<element name="settings.icon.image" type="BinaryString" subtype="image/png">
+	        <description value="settings.icon.image.description" />
+	        <length max="100000" />
+      	</element>
 		<element name="settings.log.promptName" type="String">
 			<description value="settings.log.promptName.description" />
 			<default value="Log" />
@@ -49,6 +53,7 @@
 		<layout>
 			<group title="appsetting.title">
 				<settingref name="settings.icon.text" />
+				<settingref name="settings.icon.image" />
 			</group>
 			<group title="networkuser.title">
 				<description value="networkuser.description" />

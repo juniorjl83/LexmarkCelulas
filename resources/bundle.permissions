@@ -22,4 +22,3 @@ permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.webapp.WebAp
 
 permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService", "get";
 
-permission org.osgi.framework.ServicePermission "com.lexmark.prtapp.email.EmailService", "get";
