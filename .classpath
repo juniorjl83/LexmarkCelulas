@@ -269,6 +269,5 @@
 	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/webservices-lib.jar"/>
 	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib4/smbclientservice-lib.jar"/>
 	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/components/newcharacteristics.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/components/commons-email.jar"/>
 	<classpathentry kind="output" path=".bin"/>
 </classpath>
