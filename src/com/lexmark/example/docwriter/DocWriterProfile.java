@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Dictionary;
@@ -22,6 +23,8 @@ import org.ungoverned.gravity.servicebinder.Lifecycle;
 import org.ungoverned.gravity.servicebinder.ServiceBinderContext;
 
 import com.lexmark.core.IntegerElem;
+import com.lexmark.example.docwriter.customvlm.EditBoxPrompt;
+import com.lexmark.example.docwriter.customvlm.OmurPrompt;
 import com.lexmark.example.docwriter.singleton.Id;
 import com.lexmark.example.docwriter.singleton.Trabajo;
 import com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService;
@@ -421,106 +424,166 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
          if (names.size() > 0)
          {
-
-            String[] namesAsArray = (String[]) names.toArray(new String[0]);
-
-            ComboPrompt cp = (ComboPrompt) context.getPromptFactory()
-                  .newPrompt(ComboPrompt.ID);
-            cp.setItems(namesAsArray);
-            cp.setLabel("Seleccione un proceso de escaneo");
-            cp.setSelection(0);
-            context.displayPrompt(cp);
-
-            int selection = cp.getSelection();
-            String selectedPid = (String) pids.get(selection);
-            SettingDefinitionMap instance = instances.getInstance(selectedPid);
-
-            StringPrompt inputPrompt = (StringPrompt) context.getPromptFactory()
-                  .newPrompt(StringPrompt.ID);
-            String idDocumento = (String) instance.get("settings.fileName")
-                  .getCurrentValue();
-            SettingDefinition instanceIsFileName = instance
-                  .get("settings.isFileName");
-            Boolean isFileName = (Boolean) instanceIsFileName.getCurrentValue();
-
-            if (isFileName.booleanValue())
-            {
-               inputPrompt.setValue(idDocumento);
-               inputPrompt.setLabel(
-                     "Por favor digite el número de documento de identificación o radicado de la solicitud (3-70 caracteres):");
-               inputPrompt.setMinLength(3);
-               inputPrompt.setMaxLength(70);
-               context.displayPrompt(inputPrompt);
-               idDocumento = inputPrompt.getValue();
-            }
-
-            // Now that we have the PID of the chosen instance, let's show a
-            // prompt corresponding to that instance.
-
-            InfoServer infoServer = new InfoServer(Activator.getLog());
-            ArrayList lstServers = infoServer.obtenerInforServers(instance,
-                  ourAppSettings);
-            Activator.getLog()
-                  .info("cantidad servidores:: " + lstServers.size());
-            infoServer.verificarConexiones(lstServers, smbClientService);
-            Activator.getLog()
-            .info("cantidad servidores despues de verificar:: " + lstServers.size());
-            String logServer = logServerReturn(lstServers);
-            Activator.getLog().info("Servers:" + logServer);
-
-            sucursal = (String) ourAppSettings.get("settings.sucursal")
-                  .getCurrentValue();
-            String fileName = sucursal + "_" + idDocumento;
-
-            emailNotificacion = (String) ourAppSettings.get("settings.email")
-                  .getCurrentValue();
+            ArrayList lstServers = null;
+            SettingDefinitionMap instance = null;
+            boolean controlPantallas = true;
+            int state = 0;
+            String fileName = ""; 
+            String fileType = "";
+            String filePassword = "";
+            String idDocumento = "";
+            Boolean isFileName = Boolean.FALSE;
+            StringPrompt inputPrompt = null;
+            int initialSelection = 0;
             
-            SettingDefinition instanceIsFileFormat = instance
-                  .get("settings.isFileFormat");
-            Boolean isFileFormat = (Boolean) instanceIsFileFormat
-                  .getCurrentValue();
+            loop: while (controlPantallas){
+               switch(state) {
+               case 0:
+                  boolean wasChange = false;
+                  Activator.getLog()
+                     .info("case 0");
+                  //Back inicio primer pantallazo
+                  String[] namesAsArray = (String[]) names.toArray(new String[0]);
+                  ComboPrompt cp = (ComboPrompt) context.getPromptFactory()
+                        .newPrompt(ComboPrompt.ID);
+                  cp.setItems(namesAsArray);
+                  cp.setLabel("Seleccione un proceso de escaneo");
+                  cp.setSelection(initialSelection);
+                  context.displayPrompt(cp);
 
-            SettingDefinition instanceIsDateMark = instance
-                  .get("settings.isFileDate");
-            isDateMark = (Boolean) instanceIsDateMark.getCurrentValue();
+                  int finalSelection = cp.getSelection();
+                  
+                  if (initialSelection != finalSelection){
+                     Activator.getLog().info("was changed");
+                     initialSelection = finalSelection;
+                     wasChange = true;
+                  }
+                  
+                  if ( wasChange ||  instance == null){
+                     Activator.getLog().info("entra a setear valores");
+                     String selectedPid = (String) pids.get(finalSelection);
+                     instance = instances.getInstance(selectedPid);
 
-            SettingDefinition instanceIntFileFormat = instance
-                  .get("settings.fileFormat");
-            int intFileFormat = ((Integer) instanceIntFileFormat
-                  .getCurrentValue()).intValue();
-            String[] fileTypeAsArray =
-            { "TIFF", "JPG", "PDF", "MULTI-TIFF", "PDF SEGURO" };
-            String fileType;
+                     inputPrompt = (StringPrompt) context.getPromptFactory()
+                           .newPrompt(StringPrompt.ID);
+                     idDocumento = (String) instance.get("settings.fileName")
+                           .getCurrentValue();
+                     SettingDefinition instanceIsFileName = instance
+                           .get("settings.isFileName");
+                     isFileName = (Boolean) instanceIsFileName.getCurrentValue();
+   
+                  }
+                  //back fin primer pantallazo
+               case 1:
+                  Activator.getLog()
+                     .info("case 1");
+                  //back inicio segundo pantallazo
+                  if (isFileName.booleanValue())
+                  {
+                     String pregunta = "Por favor digite el número de documento de identificación o radicado de la solicitud:";
+                     EditBoxPrompt editBox = new EditBoxPrompt("0", pregunta, idDocumento);
+                     context.displayPrompt(editBox);
+                     
+                     Activator.getLog().info(
+                           "dismiis button::: " + editBox.getDismissButton());
+                     if ("cancel".equals(editBox.getDismissButton()))
+                     {
+                        throw new PromptException(
+                              PromptException.PROMPT_CANCELLED_BY_USER);
+                     }else if ("back".equals(editBox.getDismissButton())){
+                        state = 0;
+                        idDocumento = editBox.getRespuesta();
+                        break;
+                     }
+                     //back fin segundo pantallazo
+                     Activator.getLog().info(
+                           "Respuesta::: " + editBox.getRespuesta());
+                     idDocumento = editBox.getRespuesta();
+                  } 
+               case 2: 
+                  Activator.getLog()
+                     .info("case 2");
+                  InfoServer infoServer = new InfoServer(Activator.getLog());
+                  lstServers = infoServer.obtenerInforServers(instance,
+                        ourAppSettings);
+                  Activator.getLog()
+                        .info("cantidad servidores:: " + lstServers.size());
+                  infoServer.verificarConexiones(lstServers, smbClientService);
+                  Activator.getLog()
+                  .info("cantidad servidores despues de verificar:: " + lstServers.size());
+                  String logServer = logServerReturn(lstServers);
+                  Activator.getLog().info("Servers:" + logServer);
 
-            if (isFileFormat.booleanValue())
-            {
-               ComboPrompt cpFileType = (ComboPrompt) context.getPromptFactory()
-                     .newPrompt(ComboPrompt.ID);
-               cpFileType.setItems(fileTypeAsArray);
-               cpFileType
-                     .setLabel("Seleccione el formato del archivo a generar.");
-               cpFileType.setSelection(getValueFileFormat(intFileFormat));
-               context.displayPrompt(cpFileType);
-               int selectionFileType = cpFileType.getSelection();
-               if (selectionFileType == 3)
-               {
-                  isMultiTiff = Boolean.TRUE;
+                  sucursal = (String) ourAppSettings.get("settings.sucursal")
+                        .getCurrentValue();
+                  fileName = sucursal + "_" + idDocumento;
+
+                  emailNotificacion = (String) ourAppSettings.get("settings.email")
+                        .getCurrentValue();
+                  
+                  SettingDefinition instanceIsFileFormat = instance
+                        .get("settings.isFileFormat");
+                  Boolean isFileFormat = (Boolean) instanceIsFileFormat
+                        .getCurrentValue();
+
+                  SettingDefinition instanceIsDateMark = instance
+                        .get("settings.isFileDate");
+                  isDateMark = (Boolean) instanceIsDateMark.getCurrentValue();
+
+                  SettingDefinition instanceIntFileFormat = instance
+                        .get("settings.fileFormat");
+                  int intFileFormat = ((Integer) instanceIntFileFormat
+                        .getCurrentValue()).intValue();
+                  String[] fileTypeAsArray =
+                  { "TIFF", "JPG", "PDF", "MULTI-TIFF", "PDF SEGURO" };
+
+                  if (isFileFormat.booleanValue())
+                  {
+                     OmurPrompt omurPromt = new OmurPrompt(
+                           "1",
+                           "Seleccione el formato del archivo a generar.", fileTypeAsArray,
+                           getValueFileFormat(intFileFormat));
+                     context.displayPrompt(omurPromt);
+                     Activator.getLog().info(
+                           "dismiis button::: " + omurPromt.getDismissButton());
+                     if ("cancel".equals(omurPromt.getDismissButton()))
+                     {
+                        throw new PromptException(
+                              PromptException.PROMPT_CANCELLED_BY_USER);
+                     }else if ("back".equals(omurPromt.getDismissButton())){
+                        if (isFileName.booleanValue()){
+                           state = 1;   
+                        }else{
+                           state = 0;
+                        }
+                        break;
+                     }
+                     Activator.getLog().info(
+                           "Respuesta::: " + omurPromt.getRespuesta());
+                     int selectionFileType = Integer.parseInt(omurPromt.getRespuesta());
+                     if (selectionFileType == 3)
+                     {
+                        isMultiTiff = Boolean.TRUE;
+                     }
+                     fileType = fileTypeAsArray[selectionFileType];
+                  }
+                  else
+                  {
+                     if (intFileFormat == 3)
+                     {
+                        isMultiTiff = Boolean.TRUE;
+                     }
+                     fileType = fileTypeAsArray[getValueFileFormat(intFileFormat)];
+
+                  }
+                  filePassword = (String) instance
+                        .get("settings.instanceFilePassword").getCurrentValue();
+               default:
+                  break loop; 
                }
-               fileType = fileTypeAsArray[selectionFileType];
             }
-            else
-            {
-               if (intFileFormat == 3)
-               {
-                  isMultiTiff = Boolean.TRUE;
-               }
-               fileType = fileTypeAsArray[getValueFileFormat(intFileFormat)];
 
-            }
-            String filePassword = (String) instance
-                  .get("settings.instanceFilePassword").getCurrentValue();
-
-            if (!lstServers.isEmpty())
+            if (lstServers!= null && !lstServers.isEmpty())
             {
 
                try
