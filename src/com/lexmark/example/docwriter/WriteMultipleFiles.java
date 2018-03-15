@@ -2,7 +2,6 @@ package com.lexmark.example.docwriter;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,9 +11,7 @@ import com.lexmark.example.docwriter.singleton.Id;
 import com.lexmark.example.docwriter.singleton.Trabajo;
 import com.lexmark.prtapp.image.Image;
 import com.lexmark.prtapp.image.ImageFactory;
-import com.lexmark.prtapp.image.JpegImageWriter;
 import com.lexmark.prtapp.image.TiffImageWriter;
-import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.smbclient.SmbClient;
 import com.lexmark.prtapp.util.AppLogRef;
 
@@ -27,13 +24,11 @@ public class WriteMultipleFiles extends Thread
    private String ext;
    private AppLogRef log;
    private Boolean isFinish = Boolean.FALSE;
-   private MemoryManagerInstance memoryManager;
-   private boolean isLastFile = false;
    private Id id;
 
    public WriteMultipleFiles(ImageFactory imageFactory, SmbClient client,
          ArrayList lstImages, Boolean isDateMark, String ext,
-         AppLogRef log, MemoryManagerInstance memoryManager, boolean isLastFile, Id id)
+         AppLogRef log, Id id)
    {
       super();
       this.imageFactory = imageFactory;
@@ -42,8 +37,6 @@ public class WriteMultipleFiles extends Thread
       this.isDateMark = isDateMark;
       this.ext = ext;
       this.log = log;
-      this.memoryManager = memoryManager;
-      this.isLastFile = isLastFile;
       this.id = id;
    }
 
@@ -82,10 +75,6 @@ public class WriteMultipleFiles extends Thread
                   img.freeResources();
                   img = null;
                }
-               if (isLastFile && file != null)
-               {
-                  file.delete();
-               }
             }
             catch (Exception e)
             {
@@ -95,13 +84,6 @@ public class WriteMultipleFiles extends Thread
 
          isFinish = Boolean.TRUE;
          log.info("finaliza hilo write multiple files: " + this);
-         Map imagesOnDisk = Trabajo.getInstance();
-         log.info("trabajos en memoria: " + imagesOnDisk.size());
-         log.info("Borrando imagenes de memoria: " + this);
-         imagesOnDisk.remove(id);
-         log.info("trabajos en memoria: " + imagesOnDisk.size());       
-         
-         
       }
       catch (Exception e)
       {
@@ -114,8 +96,6 @@ public class WriteMultipleFiles extends Thread
             img.freeResources();
             img = null;
          }
-         if (memoryManager.getNativeMem() != null && isLastFile)
-            memoryManager.releaseMemory();
       }
    }
 

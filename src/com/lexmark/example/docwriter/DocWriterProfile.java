@@ -152,7 +152,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             String fileType = id.getFileType();
             String filePassword = id.getFilePassword();
             
-            Activator.getLog().info("Archivos en memoria :: " + disk.getRootPath().list().length);
+            Activator.getLog().info("Archivos en memoria inicio:: " + disk.getRootPath().list().length);
+            ArrayList lstThreads = new ArrayList();
             for (int j = 0; j < lstServers.size(); j++)
             {
                if ((j + 1) == lstServers.size())
@@ -167,7 +168,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   Activator.getLog().info("jpg archivo, servidor " + j);
                   WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
                         client, fileNames, isDateMark, ".jpg",
-                        Activator.getLog(), memoryManager, isLastFile, id);
+                        Activator.getLog(), id);
+                  lstThreads.add(mf);
                   mf.start();
                }
                else if (isMultiTiff.booleanValue())
@@ -175,7 +177,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   Activator.getLog().info("multitiff archivo, servidor " + j);
                   WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
                         client, fileNames, isDateMark, ".tif",
-                        Activator.getLog(), memoryManager, isLastFile, id);
+                        Activator.getLog(), id);
+                  lstThreads.add(mf);
                   mf.start();
                }
                else
@@ -186,8 +189,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                         .newDocumentWriter(fileFormat);
                   WriteOneFile of = new WriteOneFile(dw, imageFactory,
                         Activator.getLog(), client, fileFormat,
-                        filePassword, fileNames, isDateMark, memoryManager,
-                        isLastFile, id);
+                        filePassword, fileNames, isDateMark, id);
+                  lstThreads.add(of);
                   of.start();
                }
             }
@@ -241,8 +244,53 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             lineLog.setNumSheets(numSheets);
             WriteLog wl = new WriteLog(clientLog, Activator.getLog(), logFileName,
                   lineLog);
+            lstThreads.add(wl);
             wl.start();
+            
+            int numThreadFinish;
+            
+            do
+            {
+               numThreadFinish = 0;
+               for (int i = 0; i < lstThreads.size(); i++)
+               {
+                  if (lstThreads.get(i) instanceof WriteMultipleFiles)
+                  {
+                     if (((WriteMultipleFiles) lstThreads.get(i)).isFinish()
+                           .booleanValue())
+                     {
+                        numThreadFinish++;
+                     }
+                  }
+                  else if (lstThreads.get(i) instanceof WriteOneFile)
+                  {
+                     if (((WriteOneFile) lstThreads.get(i)).isFinish().booleanValue())
+                     {
+                        numThreadFinish++;
+                     }
+                  }else {
+                     if (((WriteLog) lstThreads.get(i)).isFinish().booleanValue())
+                     {
+                        numThreadFinish++;
+                     }
+                  }
+               }
+            } while (numThreadFinish < lstThreads.size());
+            
+            //delete files
+            for (int i = 0; i < fileNames.size(); i++)
+            {
+               File fileToDelete = (File) fileNames.get(i);
+               Activator.getLog().info("Borrando archivo..... " + fileToDelete.getName());
+               fileToDelete.delete();
+            }
+            Activator.getLog().info("Removiendo trabajo..... " + id);
+            imagesOnDisk.remove(id);
          }
+         
+         if (memoryManager.getNativeMem() != null)
+            Activator.getLog().info("Liberando memoria.");
+            memoryManager.releaseMemory();
       }
 
       private int getFileFormat(String fileType)
