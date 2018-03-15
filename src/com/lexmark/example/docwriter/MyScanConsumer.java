@@ -151,11 +151,9 @@ public class MyScanConsumer implements ScanConsumer
    
    private void cleanUpOldFiles()
    {
-      File root = disk.getRootPath();
-      String[] files = root.list();
-      for (int i = 0; i < files.length; i++)
+      for (int i = 0; i < images.size(); i++)
       {
-         File fileToDelete = new File(root, files[i]);
+         File fileToDelete = (File)images.get(i);
          fileToDelete.delete();
       }
    }

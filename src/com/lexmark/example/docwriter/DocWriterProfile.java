@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Dictionary;
@@ -13,7 +12,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import org.osgi.framework.ServiceRegistration;
@@ -25,10 +23,7 @@ import org.ungoverned.gravity.servicebinder.ServiceBinderContext;
 import com.lexmark.core.IntegerElem;
 import com.lexmark.example.docwriter.customvlm.EditBoxPrompt;
 import com.lexmark.example.docwriter.customvlm.OmurPrompt;
-import com.lexmark.example.docwriter.singleton.Id;
-import com.lexmark.example.docwriter.singleton.Trabajo;
 import com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService;
-import com.lexmark.prtapp.image.DocumentWriter;
 import com.lexmark.prtapp.image.DocumentWriterFactory;
 import com.lexmark.prtapp.image.ImageFactory;
 import com.lexmark.prtapp.memoryManager.MemoryManager;
@@ -43,17 +38,11 @@ import com.lexmark.prtapp.settings.SettingDefinitionMap;
 import com.lexmark.prtapp.settings.SettingsAdmin;
 import com.lexmark.prtapp.settings.SettingsGroup;
 import com.lexmark.prtapp.settings.SettingsStatus;
-import com.lexmark.prtapp.smbclient.AuthOptions;
-import com.lexmark.prtapp.smbclient.SmbClient;
-import com.lexmark.prtapp.smbclient.SmbClientException;
 import com.lexmark.prtapp.smbclient.SmbClientService;
-import com.lexmark.prtapp.smbclient.SmbConfig.ConfigBuilder;
 import com.lexmark.prtapp.std.prompts.ComboPrompt;
 import com.lexmark.prtapp.std.prompts.MessagePrompt;
 import com.lexmark.prtapp.std.prompts.StringPrompt;
 import com.lexmark.prtapp.std.prompts.WaitMessagePrompt;
-import com.lexmark.prtapp.std.prompts.WaitPrompt;
-import com.lexmark.prtapp.std.prompts.WaitPrompt.Stoppable;
 import com.lexmark.prtapp.storagedevice.StorageDevice;
 import com.lexmark.prtapp.util.Messages;
 import com.lexmark.ui.Constants;
@@ -92,205 +81,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
    private DeviceCharacteristicsService characteristicsService = null;
    Log lineLog = new Log();
-
-   /**
-    * Helper class that does the document writer stuff. The array list of file
-    * names comes from the scan consumer. We will create an image out of each of
-    * those files, and then stuff it into the document writer.
-    */
-   public class MyStoppable implements Stoppable
-   {
-      MyScanConsumer myConsumer = null;
-      ArrayList lstServers;
-      BasicProfileContext context;
-      MemoryManagerInstance memoryManager;
-
-      /**
-       * Constructor.
-       * 
-       * @param myConsumer
-       *           The scan consumer. This is used to get the files saved to
-       *           disk, and is also used to ensure it's safe to move forward
-       * @param filePassword
-       * @param fileType
-       * @param context
-       * @param memoryManager
-       * @param destFile
-       *           The file where we will save the PDF
-       * @param isColor
-       *           if this image color or not? We need this to determine the
-       *           appropriate PDF compression
-       */
-      public MyStoppable(MyScanConsumer myConsumer, ArrayList lstServers, 
-            BasicProfileContext context, MemoryManagerInstance memoryManager)
-      {
-         this.myConsumer = myConsumer;
-         this.lstServers = lstServers;
-         this.context = context;
-         this.memoryManager = memoryManager;
-      }
-
-      /*
-       * (non-Javadoc)
-       * 
-       * @see com.lexmark.prtapp.std.prompts.WaitPrompt.Stoppable#run()
-       */
-      public synchronized void run()
-      {
-
-         Activator.getLog().info("entra run stopable");
-         myConsumer.waitForComplete();
-         Map imagesOnDisk = Trabajo.getInstance();
-         Iterator it = imagesOnDisk.entrySet().iterator();
-         while (it.hasNext()){
-            boolean isLastFile = false;
-            Map.Entry entry = (Map.Entry)it.next();
-            Id id = (Id)entry.getKey();
-            Activator.getLog().info("Procesando trabajo..... " + id);
-            ArrayList fileNames = (ArrayList)entry.getValue();
-            String fileName = id.getFilename();
-            String fileType = id.getFileType();
-            String filePassword = id.getFilePassword();
-            
-            Activator.getLog().info("Archivos en memoria :: " + disk.getRootPath().list().length);
-            for (int j = 0; j < lstServers.size(); j++)
-            {
-               if ((j + 1) == lstServers.size())
-               {
-                  isLastFile = true;
-                  Activator.getLog().info("is last file");
-               }
-               SmbClient client = ((InfoServer) lstServers.get(j)).getClient();
-
-               if (fileType.equals("JPG"))
-               {
-                  Activator.getLog().info("jpg archivo, servidor " + j);
-                  WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
-                        client, fileNames, isDateMark, ".jpg",
-                        Activator.getLog(), memoryManager, isLastFile, id);
-                  mf.start();
-               }
-               else if (isMultiTiff.booleanValue())
-               {
-                  Activator.getLog().info("multitiff archivo, servidor " + j);
-                  WriteMultipleFiles mf = new WriteMultipleFiles(imageFactory,
-                        client, fileNames, isDateMark, ".tif",
-                        Activator.getLog(), memoryManager, isLastFile, id);
-                  mf.start();
-               }
-               else
-               {
-                  Activator.getLog().info("un archivo, servidor " + j);
-                  int fileFormat = getFileFormat(fileType);
-                  DocumentWriter dw = docWriterFactory
-                        .newDocumentWriter(fileFormat);
-                  WriteOneFile of = new WriteOneFile(dw, imageFactory,
-                        Activator.getLog(), client, fileFormat,
-                        filePassword, fileNames, isDateMark, memoryManager,
-                        isLastFile, id);
-                  of.start();
-               }
-            }
-            Activator.getLog().info("began lg ");
-            SettingDefinitionMap ourAppSettings = settingsAdmin
-                  .getGlobalSettings("celulas");
-            String shareName = (String) ourAppSettings
-                  .get("settings.log.shareName").getCurrentValue();
-            String serverAddress = (String) ourAppSettings
-                  .get("settings.log.server").getCurrentValue();
-            String initialPath = (String) ourAppSettings.get("settings.log.path")
-                  .getCurrentValue();
-            String domainLog = (String) ourAppSettings.get("settings.log.domain")
-                  .getCurrentValue();
-            String userName = (String) ourAppSettings.get("settings.network.user")
-                  .getCurrentValue();
-            String password = (String) ourAppSettings
-                  .get("settings.network.password").getCurrentValue();
-            String logFileName = (String) ourAppSettings
-                  .get("settings.log.promptName").getCurrentValue();
-
-            ConfigBuilder configBuilder = smbClientService.getSmbConfigBuilder();
-            configBuilder.setAuthType(AuthOptions.NTLMv2);
-            configBuilder.setServer(serverAddress);
-            configBuilder.setShare(shareName);
-            configBuilder.setPath(initialPath);
-            configBuilder.setUserId(userName);
-            configBuilder.setPassword(password);
-
-            if (domainLog != null && domainLog.length() > 0)
-            {
-               configBuilder.setDomain(domainLog);
-            }
-
-            SmbClient clientLog = null;
-            try
-            {
-               clientLog = smbClientService.getNewSmbClient(configBuilder.build());
-            }
-            catch (com.lexmark.prtapp.smbclient.ConfigurationException e)
-            {
-               Activator.getLog().info("err abre lg ");
-               e.printStackTrace();
-            }
-            catch (SmbClientException e)
-            {
-               Activator.getLog().info("err abre lg ");
-               e.printStackTrace();
-            }
-            int numSheets = fileNames.size();
-            lineLog.setNumSheets(numSheets);
-            WriteLog wl = new WriteLog(clientLog, Activator.getLog(), logFileName,
-                  lineLog);
-            wl.start();
-         }
-      }
-
-      private int getFileFormat(String fileType)
-      {
-         if (fileType.equals("PDF"))
-         {
-            Activator.getLog().info("PDF format");
-            return Constants.e_PDF;
-         }
-         else if (fileType.equals("PDF SEGURO"))
-         {
-            Activator.getLog().info("PDF SECURE format");
-            return Constants.e_SECURE_PDF;
-         }
-         else if (fileType.equals("JPG"))
-         {
-            Activator.getLog().info("JPG");
-            return Constants.e_JPEG;
-         }
-         else if (fileType.equals("TIFF"))
-         {
-            Activator.getLog().info("TIFF");
-            return Constants.e_TIFF;
-         }
-         else
-         {
-            return Constants.e_PDF;
-         }
-
-      }
-
-      /*
-       * (non-Javadoc)
-       * 
-       * @see
-       * com.lexmark.prtapp.std.prompts.WaitPrompt.Stoppable#stop(java.lang.
-       * Thread, com.lexmark.prtapp.std.prompts.WaitPrompt)
-       */
-      public void stop(Thread thread, WaitPrompt prompt)
-      {
-         /**
-          * This gets called if the user presses the "cancel" button on the wait
-          * prompt. We'll just set the interrupted flag, which allows the run()
-          * method above to know it's been interrupted and act accordingly.
-          */
-         thread.interrupt();
-      }
-   }
 
    /**
     * Constructor called by Service Binder.
@@ -389,7 +179,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          {
             Activator.getLog().info("entra a reserva de memoria");
             nativeMem = memoryManager.reserveNativeMemory(30000000);
-
          }
          memoryManagerInstance = new MemoryManagerInstance(nativeMem,
                memoryManager);
@@ -612,8 +401,20 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
                   // This guy does all of the work
                   Activator.getLog().info("antes de estopable");
-                  MyStoppable myStoppable = new MyStoppable(myConsumer,
-                        lstServers, context, memoryManagerInstance);
+                  MyStoppable myStoppable = MyStoppableSingletton.getInstance();
+                  
+                  myStoppable
+                     .withMyScanConsumer(myConsumer)
+                     .withServers(lstServers)
+                     .withBasicProfileContext(context)
+                     .withMemoryManagerInstance(memoryManagerInstance)
+                     .withDocumentWriterFactory(docWriterFactory)
+                     .withStorageDevice(disk)
+                     .withImageFactory(imageFactory)
+                     .withIsMultiTiff(isMultiTiff)
+                     .withIsDateMark(isDateMark)
+                     .withSettingsAdmin(settingsAdmin)
+                     .withSmbClientService(smbClientService);
 
                   wmp.setWorkerRunnable(myStoppable, "Creación del archivo");
                   wmp.setMessage("Enviando el archivo...");
@@ -633,7 +434,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                         "No es posible conectar al destino. contacte con el administrador!");
                   context.displayPrompt(noInstances);
                }
-
             }
             else
             {
@@ -643,7 +443,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                      "No es posible conectar a ningún servidor destino. Contacte con el administrador!");
                context.displayPrompt(noInstances);
             }
-
          }
          else
          {

@@ -102,13 +102,13 @@ public class WriteOneFile extends Thread
             memoryManager.releaseMemory();
       }
 
-      isFinish = Boolean.TRUE;
       log.info("finaliza write one file hilo: " + this);
       Map imagesOnDisk = Trabajo.getInstance();
       log.info("trabajos en memoria: " + imagesOnDisk.size());
       log.info("Borrando imagenes de memoria: " + this);
       imagesOnDisk.remove(id);
-      log.info("trabajos en memoria: " + imagesOnDisk.size());   
+      log.info("trabajos en memoria: " + imagesOnDisk.size());
+      isFinish = Boolean.TRUE;
    }
 
    public Boolean isFinish()
