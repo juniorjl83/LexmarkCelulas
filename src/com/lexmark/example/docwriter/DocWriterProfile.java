@@ -247,50 +247,9 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             lstThreads.add(wl);
             wl.start();
             
-            int numThreadFinish;
-            
-            do
-            {
-               numThreadFinish = 0;
-               for (int i = 0; i < lstThreads.size(); i++)
-               {
-                  if (lstThreads.get(i) instanceof WriteMultipleFiles)
-                  {
-                     if (((WriteMultipleFiles) lstThreads.get(i)).isFinish()
-                           .booleanValue())
-                     {
-                        numThreadFinish++;
-                     }
-                  }
-                  else if (lstThreads.get(i) instanceof WriteOneFile)
-                  {
-                     if (((WriteOneFile) lstThreads.get(i)).isFinish().booleanValue())
-                     {
-                        numThreadFinish++;
-                     }
-                  }else {
-                     if (((WriteLog) lstThreads.get(i)).isFinish().booleanValue())
-                     {
-                        numThreadFinish++;
-                     }
-                  }
-               }
-            } while (numThreadFinish < lstThreads.size());
-            
-            //delete files
-            for (int i = 0; i < fileNames.size(); i++)
-            {
-               File fileToDelete = (File) fileNames.get(i);
-               Activator.getLog().info("Borrando archivo..... " + fileToDelete.getName());
-               fileToDelete.delete();
-            }
-            Activator.getLog().info("Removiendo trabajo..... " + id);
-            imagesOnDisk.remove(id);
+            FinishProcess fp = new FinishProcess(lstThreads, fileNames, id, memoryManager);
+            fp.start();
          }
-         
-         if (memoryManager.getNativeMem() != null)
-            Activator.getLog().info("Liberando memoria.");
-            memoryManager.releaseMemory();
       }
 
       private int getFileFormat(String fileType)
