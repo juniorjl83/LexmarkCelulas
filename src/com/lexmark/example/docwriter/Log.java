@@ -10,6 +10,7 @@ public class Log
    private String fileType;
    private int numSheets;
    private int numBlank;
+   private String separator = "|";
 
    public Log()
    {
@@ -118,24 +119,34 @@ public class Log
    {
       this.numBlank = numBlank;
    }
+   
+   public String getSeparator()
+   {
+      return separator;
+   }
+
+   public void setSeparator(String separator)
+   {
+      this.separator = separator;
+   }
 
    public String toString()
    {
       StringBuffer builder = new StringBuffer();
       builder.append(serial);
-      builder.append(",");
+      builder.append(separator);
       builder.append(path);
-      builder.append(",");
+      builder.append(separator);
       builder.append(date);
-      builder.append(",");
+      builder.append(separator);
       builder.append(nameCelula);
-      builder.append(",");
+      builder.append(separator);
       builder.append(nameDocument);
-      builder.append(",");
+      builder.append(separator);
       builder.append(numSheets);
-      builder.append(",");
+      builder.append(separator);
       builder.append(fileType);
-      builder.append(",");
+      builder.append(separator);
       builder.append(numBlank);
 
       return builder.toString();

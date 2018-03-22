@@ -156,11 +156,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             ArrayList lstThreads = new ArrayList();
             for (int j = 0; j < lstServers.size(); j++)
             {
-               if ((j + 1) == lstServers.size())
-               {
-                  isLastFile = true;
-                  Activator.getLog().info("is last file");
-               }
                SmbClient client = ((InfoServer) lstServers.get(j)).getClient();
 
                if (fileType.equals("JPG"))
@@ -211,7 +206,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   .get("settings.network.password").getCurrentValue();
             String logFileName = (String) ourAppSettings
                   .get("settings.log.promptName").getCurrentValue();
+            String logCharacter = (String) ourAppSettings
+                  .get("settings.log.caracter").getCurrentValue();
 
+            lineLog.setSeparator(logCharacter);
             ConfigBuilder configBuilder = smbClientService.getSmbConfigBuilder();
             configBuilder.setAuthType(AuthOptions.NTLMv2);
             configBuilder.setServer(serverAddress);

@@ -47,7 +47,6 @@ public class WriteOneFile extends Thread
    {
       dw.setConsumer(
             new FileShareHandler(client, fileFormat, id.getFilename(), isDateMark));
-      // dw.setCompression(Constants.eZLIB);
 
       if (fileFormat == Constants.e_SECURE_PDF)
       {

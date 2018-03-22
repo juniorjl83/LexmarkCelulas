@@ -33,7 +33,6 @@ public class FinishProcess extends Thread
       do
       {
          numThreadFinish = 0;
-         Activator.getLog().info("Numero de Hilos " + lstThreads.size());
          for (int i = 0; i < lstThreads.size(); i++)
          {
             if (lstThreads.get(i) instanceof WriteMultipleFiles)
@@ -59,7 +58,6 @@ public class FinishProcess extends Thread
                }
             }
          }
-         Activator.getLog().info("Hilos finalizados" + numThreadFinish);
       } while (numThreadFinish < lstThreads.size());
 
       // delete files

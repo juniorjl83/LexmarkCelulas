@@ -33,6 +33,11 @@
 			<description value="settings.log.domain.description" />
 			<length min="0" max="100" />
 		</element>
+		<element name="settings.log.caracter" type="String">
+			<description value="settings.log.caracter.description" />
+			<default value="|" />
+			<length min="1" max="1" />
+		</element>
 		<element name="settings.network.user" type="String">
 			<description value="settings.network.user.description" />
 			<length min="0" max="30" />
@@ -69,6 +74,7 @@
 				<settingref name="settings.log.shareName" />
 				<settingref name="settings.log.path" />
 				<settingref name="settings.log.domain" />
+				<settingref name="settings.log.caracter" />
 			</group>
 		</layout>
 
