@@ -268,24 +268,18 @@
 				<settingref name="settings.instanceShareName1" />
 				<settingref name="settings.instancePath1" />
 				<settingref name="settings.instanceDomain1" />
-				<settingref name="settings.instanceUserId1" />
-				<settingref name="settings.instancePassword1" />
 			</group>
 			<group title="settings.groupServer2">
 				<settingref name="settings.instanceServer2" />
 				<settingref name="settings.instanceShareName2" />
 				<settingref name="settings.instancePath2" />
 				<settingref name="settings.instanceDomain2" />
-				<settingref name="settings.instanceUserId2" />
-				<settingref name="settings.instancePassword2" />
 			</group>
 			<group title="settings.groupServer3">
 				<settingref name="settings.instanceServer3" />
 				<settingref name="settings.instanceShareName3" />
 				<settingref name="settings.instancePath3" />
 				<settingref name="settings.instanceDomain3" />
-				<settingref name="settings.instanceUserId3" />
-				<settingref name="settings.instancePassword3" />
 			</group>
 			<group title="settings.groupScanSettings">
 

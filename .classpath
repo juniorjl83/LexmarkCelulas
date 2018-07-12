@@ -2,272 +2,76 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/activedirectory-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/authservice-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/bouncycastle13-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/jce-jdk13-139/docs"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/characteristics-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/clex-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/cm_all-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/knopflerfish"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/commonsfileupload-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/commons-fileupload"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/core-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/corecommunications-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/crimson_all-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/crimson"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/cryptoapi-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/deviceStatus-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/device_all-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/knopflerfish"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/driverutil-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/elementconnection-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/email-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/fdi-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/framework.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/knopflerfish"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/http_all-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/knopflerfish"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/iddevice-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/image-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/imageserver-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/install-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/j9jsse-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/javax-usb-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/javax-usb"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/jgss-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/jsdk-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/servlet"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/json_simple-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/json-simple"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/junit-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/junit/javadoc"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/kerberos-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/keyboarddevice-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/ksoap-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/ldap-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/lesSystem-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/license-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/licensemanagertest-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/log_all-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/knopflerfish"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/memory-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/mimeutil-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/mrcpdf-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/objects-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/ocr-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/payloadinstall-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/pkcs11tokens-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/pluggableAuth-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/pluggableobject-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/prtappProfile-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/prtapputil-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/remoteadmin-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/rmi.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/securitylogservice-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/servicebinder.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/servicebinder/api"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/sessions-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/settings-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/settingsio-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/smartcardio-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/solutions-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/sound-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/startup-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/storagedevice-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/systemManager-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/thumbnail-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/ui-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/unixdomainsocket-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/usbdevice-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/usbserial-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/util-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/webadmin-lib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/doc/api/les"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib3/webservices-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/lib4/smbclientservice-lib.jar"/>
-	<classpathentry kind="lib" path="C:/desarrollo/LexmarkSDK/6_033SDK/6_033SDK/components/newcharacteristics.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/activedirectory-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/authservice-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/bouncycastle13-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/characteristics-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/clex-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/cm_all-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/commonsfileupload-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/corecommunications-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/core-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/crimson_all-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/cryptoapi-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/device_all-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/deviceStatus-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/driverutil-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/elementconnection-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/email-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/fdi-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/framework.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/http_all-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/iddevice-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/image-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/imageserver-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/install-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/j9jsse-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/javax-usb-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/jgss-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/jsdk-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/json_simple-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/junit-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/kerberos-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/keyboarddevice-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/ksoap-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/ldap-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/lesSystem-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/license-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/licensemanagertest-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/log_all-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/memory-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/mimeutil-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/mrcpdf-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/objects-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/ocr-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/payloadinstall-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/pkcs11tokens-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/pluggableAuth-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/pluggableobject-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/prtappProfile-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/prtapputil-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/remoteadmin-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/rmi.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/securitylogservice-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/servicebinder.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/sessions-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/settingsio-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/settings-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/smartcardio-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/solutions-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/sound-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/startup-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/storagedevice-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/systemManager-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/thumbnail-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/ui-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/unixdomainsocket-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/usbdevice-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/usbserial-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/util-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/webadmin-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib3/webservices-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/lib4/smbclientservice-lib.jar"/>
+	<classpathentry kind="lib" path="C:/develop/sdkLexmark/components/newcharacteristics.jar"/>
 	<classpathentry kind="output" path=".bin"/>
 </classpath>

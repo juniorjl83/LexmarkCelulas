@@ -31,6 +31,8 @@ import com.lexmark.prtapp.newcharacteristics.DeviceCharacteristicsService;
 import com.lexmark.prtapp.image.DocumentWriter;
 import com.lexmark.prtapp.image.DocumentWriterFactory;
 import com.lexmark.prtapp.image.ImageFactory;
+import com.lexmark.prtapp.memoryManager.Memory;
+import com.lexmark.prtapp.memoryManager.MemoryException;
 import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.memoryManager.NativeMemory;
 import com.lexmark.prtapp.profile.BasicProfileContext;
@@ -38,6 +40,7 @@ import com.lexmark.prtapp.profile.PrtappProfile;
 import com.lexmark.prtapp.profile.PrtappProfileException;
 import com.lexmark.prtapp.profile.WelcomeScreenable;
 import com.lexmark.prtapp.prompt.PromptException;
+import com.lexmark.prtapp.prompt.PromptFactoryException;
 import com.lexmark.prtapp.settings.SettingDefinition;
 import com.lexmark.prtapp.settings.SettingDefinitionMap;
 import com.lexmark.prtapp.settings.SettingsAdmin;
@@ -385,18 +388,32 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
    public void go(BasicProfileContext context) throws PrtappProfileException
    {
       NativeMemory nativeMem = null;
+      Memory javaMem = null;
       MemoryManagerInstance memoryManagerInstance = null;
       int noMemoryErros = 0;
       isMultiTiff = Boolean.FALSE;
       try
       {
-         if (memoryManager != null)
-         {
-            Activator.getLog().info("entra a reserva de memoria");
-            nativeMem = memoryManager.reserveNativeMemory(30000000);
-
+         if(memoryManager != null) {
+            try
+            {
+               nativeMem = memoryManager.reserveNativeMemory(60000000);
+               javaMem = memoryManager.reserveNativeMemory(2000000);
+            }
+            catch(MemoryException e)
+            {
+               // If we don't get the memory, we can be nice and inform the user.
+               String message = "No hay suficiente memoria para correr el aplicativo!";
+               String title = "Memoria insuficiente.";
+               MessagePrompt prompt = (MessagePrompt) context.getPromptFactory().newPrompt(MessagePrompt.ID);
+               prompt.setLabel(title);
+               prompt.setMessage(message);
+               context.displayPrompt(prompt);
+               return;
+            }
          }
-         memoryManagerInstance = new MemoryManagerInstance(nativeMem,
+         
+         memoryManagerInstance = new MemoryManagerInstance(nativeMem, javaMem,
                memoryManager);
          SettingsGroup instances = settingsAdmin.getInstanceSettings("celulas");
          SettingDefinitionMap ourAppSettings = settingsAdmin
@@ -604,7 +621,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   context.displayWorkflow(docWorkflow);
 
                   MyScanConsumer myConsumer = new MyScanConsumer(imageFactory,
-                        disk, memoryManagerInstance, fileName, fileType, filePassword);
+                        disk, fileName, fileType, filePassword);
 
                   docWorkflow.setConsumer(myConsumer);
                   context.startWorkflow(docWorkflow,
@@ -662,15 +679,13 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       catch (PromptException e)
       {
          Activator.getLog().info("Prompt stopped: " + e.getMessage());
-         if (memoryManagerInstance != null
-               && memoryManagerInstance.getNativeMem() != null)
+         if (memoryManagerInstance != null)
             memoryManagerInstance.releaseMemory();
       }
       catch (Exception e)
       {
          Activator.getLog().info("Exception thrown", e);
-         if (memoryManagerInstance != null
-               && memoryManagerInstance.getNativeMem() != null)
+         if (memoryManagerInstance != null)
             memoryManagerInstance.releaseMemory();
       }
    }
@@ -1155,5 +1170,5 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          return true;
       }
    }
-
+   
 }

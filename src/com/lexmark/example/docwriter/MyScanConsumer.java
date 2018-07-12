@@ -30,7 +30,6 @@ public class MyScanConsumer implements ScanConsumer
    private StorageDevice disk;
    private boolean isFinished = false;
    private Object synch = new Object();
-   private MemoryManagerInstance memoryManager;
    private int numBlank = 0;
    private String filename;
    private String fileType;
@@ -42,16 +41,14 @@ public class MyScanConsumer implements ScanConsumer
     * @param imageFactory Used in the consume method to create an Image for each
     * scan file.
     * @param fileName 
-    * @param memoryManagerInstance 
     * @param docWriterFactory Used in the consume method to create the document (PDF)
     * from the image files.
     */
-   public MyScanConsumer(ImageFactory imageFactory, StorageDevice disk, MemoryManagerInstance memoryManager, 
+   public MyScanConsumer(ImageFactory imageFactory, StorageDevice disk, 
          String filename, String fileType, String filePassword)
    {
       this.imageFactory = imageFactory;
       this.disk = disk;
-      this.memoryManager = memoryManager;
       this.filename = filename;
       this.fileType = fileType;
       this.filePassword = filePassword;
@@ -103,8 +100,6 @@ public class MyScanConsumer implements ScanConsumer
          // written, since it would just be a partial file
          Activator.getLog().info("Problem creating document", e);
          cleanUpOldFiles();
-         if(memoryManager.getNativeMem() != null) memoryManager.releaseMemory();
-         
       }
       finally
       {

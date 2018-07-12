@@ -1,5 +1,6 @@
 package com.lexmark.example.docwriter;
 
+import com.lexmark.prtapp.memoryManager.Memory;
 import com.lexmark.prtapp.memoryManager.MemoryManager;
 import com.lexmark.prtapp.memoryManager.NativeMemory;
 
@@ -7,31 +8,13 @@ public class MemoryManagerInstance
 {
    private NativeMemory nativeMem = null;
    private MemoryManager memoryManager = null;
+   Memory javaMem = null;
 
-   public MemoryManagerInstance(NativeMemory nativeMem,
+   public MemoryManagerInstance(NativeMemory nativeMem, Memory javaMem,
          MemoryManager memoryManager)
    {
       this.nativeMem = nativeMem;
-      this.memoryManager = memoryManager;
-   }
-
-   public NativeMemory getNativeMem()
-   {
-      return nativeMem;
-   }
-
-   public void setNativeMem(NativeMemory nativeMem)
-   {
-      this.nativeMem = nativeMem;
-   }
-
-   public MemoryManager getMemoryManager()
-   {
-      return memoryManager;
-   }
-
-   public void setMemoryManager(MemoryManager memoryManager)
-   {
+      this.javaMem = javaMem;
       this.memoryManager = memoryManager;
    }
 
@@ -41,8 +24,13 @@ public class MemoryManagerInstance
       {
          if (nativeMem != null && memoryManager != null)
          {
-            Activator.getLog().info("liberando memoria!");
+            Activator.getLog().info("liberando memoria nativa!");
             memoryManager.freeMemory(nativeMem);
+         }
+         if (javaMem != null && memoryManager != null) 
+         {
+            Activator.getLog().info("liberando memoria java!");
+            memoryManager.freeMemory(javaMem);
          }
       }
       catch (Exception e)

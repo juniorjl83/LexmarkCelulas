@@ -72,7 +72,7 @@ public class FinishProcess extends Thread
       Activator.getLog().info("Removiendo trabajo..... " + id);
       imagesOnDisk.remove(id);
 
-      if (memoryManager.getNativeMem() != null)
+      if (memoryManager != null)
       {
          Activator.getLog().info("Liberando memoria.");
          memoryManager.releaseMemory();
