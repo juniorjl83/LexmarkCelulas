@@ -38,6 +38,21 @@
 			<default value="|" />
 			<length min="1" max="1" />
 		</element>
+		<element name="settings.memory" type="Integer">
+			<options>
+				<option label="settings.memory.1" value="1" />
+				<option label="settings.memory.2" value="2" />
+				<option label="settings.memory.3" value="3" />
+				<option label="settings.memory.4" value="4" />
+				<option label="settings.memory.5" value="5" />
+				<option label="settings.memory.6" value="6" />
+				<option label="settings.memory.7" value="7" />
+				<option label="settings.memory.8" value="8" />
+				<option label="settings.memory.9" value="9" />
+				<option label="settings.memory.10" value="10" />
+			</options>
+			<default value="6" />
+		</element>
 		<element name="settings.network.user" type="String">
 			<description value="settings.network.user.description" />
 			<length min="0" max="30" />
@@ -59,6 +74,7 @@
 			<group title="appsetting.title">
 				<settingref name="settings.icon.text" />
 				<settingref name="settings.icon.image" />
+				<settingref name="settings.memory" />
 			</group>
 			<group title="networkuser.title">
 				<description value="networkuser.description" />
@@ -165,7 +181,7 @@
 			</options>
 			<default value="0" />
 		</element>
-
+		
 		<element name="settings.isOrientation" type="Boolean">
 			<default value="true" />
 		</element>

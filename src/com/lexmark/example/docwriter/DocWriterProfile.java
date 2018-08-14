@@ -392,12 +392,20 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
       MemoryManagerInstance memoryManagerInstance = null;
       int noMemoryErros = 0;
       isMultiTiff = Boolean.FALSE;
+      SettingsGroup instances = settingsAdmin.getInstanceSettings("celulas");
+      SettingDefinitionMap ourAppSettings = settingsAdmin
+            .getGlobalSettings("celulas");
+      
+      int memory = ((Integer) ourAppSettings.get("settings.memory").getCurrentValue()).intValue();
+      
       try
       {
          if(memoryManager != null) {
             try
             {
-               nativeMem = memoryManager.reserveNativeMemory(60000000);
+               int reserveMemory = memory * 10000000;
+               Activator.getLog().info("memoria a reservar: " + reserveMemory);
+               nativeMem = memoryManager.reserveNativeMemory(reserveMemory);
                javaMem = memoryManager.reserveNativeMemory(2000000);
             }
             catch(MemoryException e)
@@ -415,9 +423,8 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          
          memoryManagerInstance = new MemoryManagerInstance(nativeMem, javaMem,
                memoryManager);
-         SettingsGroup instances = settingsAdmin.getInstanceSettings("celulas");
-         SettingDefinitionMap ourAppSettings = settingsAdmin
-               .getGlobalSettings("celulas");
+         
+         
          Set set = instances.getInstancePids();
          ArrayList names = new ArrayList();
          ArrayList pids = new ArrayList();
