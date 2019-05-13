@@ -15,7 +15,7 @@
 	<!-- property name="api.pattern" value="..." / -->
 
 	<property name="bundle.description" value="Scan documents to network" />
-	<property name="bundle.version" value="2.1.0" />
+	<property name="bundle.version" value="2.2.0" />
 	<property name="app.isapp" value="true" />
 	<property name="bundle.baseresource" value="Resources" />
 
@@ -49,7 +49,7 @@
 	<property name="autodep.enabled" value="true" />
 
 	<!-- This ensures the bundle compiles against the correct set of libraries -->
-	<property name="framework.compile.version" value="fw3" />
+	<property name="framework.compile.version" value="fw4" />
 
 	<!-- Following property will pick all the settings for LES_SDK environment
    variable as mentioned in installation guide -->

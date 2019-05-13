@@ -47,7 +47,7 @@ public class WriteMultipleFiles extends Thread
       {
          log.info("entra marca fecha");
          dateMark = dateMark + "_";
-         SimpleDateFormat sdf = new SimpleDateFormat("MMddyyHHmmss");
+         SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
          Date date = new Date();
          dateMark = dateMark + sdf.format(date);
          Activator.getLog().info("fecha texto: " + dateMark);

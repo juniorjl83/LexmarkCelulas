@@ -23,14 +23,16 @@ public class WriteLog extends Thread
    private String dd = "99";
    private Log line;
    private Boolean isFinish = Boolean.FALSE;
+   private MemoryManagerInstance memoryManager;
 
-   public WriteLog(SmbClient client, AppLogRef log, String fileName, Log line)
+   public WriteLog(SmbClient client, AppLogRef log, String fileName, Log line, MemoryManagerInstance memoryManager)
    {
       super();
       this.client = client;
       this.log = log;
       this.fileName = fileName;
       this.line = line;
+      this.memoryManager = memoryManager;
    }
 
    public synchronized void run()
@@ -107,6 +109,11 @@ public class WriteLog extends Thread
             if (fileStream != null) fileStream.close();
             if (inputStream != null) inputStream.close();
             if (client != null) client.close();
+            if (memoryManager != null)
+            {
+               Activator.getLog().info("Liberando memoria.");
+               memoryManager.releaseMemory();
+            }
          }
          catch (IOException e)
          {

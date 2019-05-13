@@ -66,6 +66,10 @@
 			<description value="settings.sucursal.description" />
 			<length min="1" max="50" />
 		</element>
+		<element name="settings.app.filename" type="String">
+			<description value="settings.app.filename.description" />
+			<length min="1" max="50" />
+		</element>
 		<element name="settings.email" type="String">
 			<description value="settings.email.description" />
 			<length min="1" max="1000" />
@@ -84,6 +88,7 @@
 			<group title="log.title">
 				<description value="log.description" />
 				<settingref name="settings.sucursal" />
+				<settingref name="settings.app.filename" />
 				<settingref name="settings.email" />
 				<settingref name="settings.log.promptName" />
 				<settingref name="settings.log.server" />
@@ -261,6 +266,19 @@
 			<length min="0" max="30" />
 		</element>
 
+		<element name="settings.process.filename" type="String">
+			<description value="settings.process.filename.description" />
+			<length min="0" max="50" />
+		</element>
+		
+		<element name="settings.isAppFileName" type="Boolean">
+			<default value="true" />
+		</element>
+
+		<element name="settings.isProcessFileName" type="Boolean">
+			<default value="false" />
+		</element>
+		
 		<element name="settings.fileName" type="String">
 			<description value="settings.fileName.description" />
 			<default value="Documento" />
@@ -332,6 +350,9 @@
 					<settingref name="settings.fileName" />
 					<settingref name="settings.isFileName" />
 					<settingref name="settings.isFileDate" />
+					<settingref name="settings.process.filename" /> 
+					<settingref name="settings.isAppFileName" /> 
+					<settingref name="settings.isProcessFileName" />
 				</group>
 			</group>
 		</layout>

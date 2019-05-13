@@ -244,7 +244,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             int numSheets = fileNames.size();
             lineLog.setNumSheets(numSheets);
             WriteLog wl = new WriteLog(clientLog, Activator.getLog(), logFileName,
-                  lineLog);
+                  lineLog, memoryManager);
             lstThreads.add(wl);
             wl.start();
             
@@ -461,7 +461,11 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             String fileType = "";
             String filePassword = "";
             String idDocumento = "";
+            String prefijoApp = "";
+            String prefijoProceso = "";
             Boolean isFileName = Boolean.FALSE;
+            Boolean isProcessFileName = Boolean.FALSE;
+            Boolean isAppFileName = Boolean.FALSE;
             StringPrompt inputPrompt = null;
             int initialSelection = 0;
             
@@ -497,10 +501,19 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                            .newPrompt(StringPrompt.ID);
                      idDocumento = (String) instance.get("settings.fileName")
                            .getCurrentValue();
+                     prefijoProceso = (String) instance.get("settings.process.filename")
+                           .getCurrentValue();
                      SettingDefinition instanceIsFileName = instance
                            .get("settings.isFileName");
+                     SettingDefinition instanceIsProcessFileName = instance
+                           .get("settings.isProcessFileName");
+                     
                      isFileName = (Boolean) instanceIsFileName.getCurrentValue();
+                     isProcessFileName = (Boolean) instanceIsProcessFileName.getCurrentValue();
    
+                     if (isProcessFileName.booleanValue() && prefijoProceso.length() > 0){
+                        idDocumento = prefijoProceso + "_" + idDocumento;
+                     }
                   }
                   //back fin primer pantallazo
                case 1:
@@ -514,7 +527,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                      context.displayPrompt(editBox);
                      
                      Activator.getLog().info(
-                           "dismiis button::: " + editBox.getDismissButton());
+                           "dismis button::: " + editBox.getDismissButton());
                      if ("cancel".equals(editBox.getDismissButton()))
                      {
                         throw new PromptException(
@@ -528,6 +541,17 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                      Activator.getLog().info(
                            "Respuesta::: " + editBox.getRespuesta());
                      idDocumento = editBox.getRespuesta();
+                     
+                     prefijoApp = (String) ourAppSettings.get("settings.app.filename")
+                           .getCurrentValue();
+                     SettingDefinition instanceIsAppFileName = instance
+                           .get("settings.isAppFileName");
+                     isAppFileName = (Boolean) instanceIsAppFileName.getCurrentValue();
+
+                     if (isAppFileName.booleanValue() && prefijoApp.length() > 0){
+                        idDocumento = prefijoApp + "_" + idDocumento;
+                     }
+                     
                   } 
                case 2: 
                   Activator.getLog()
@@ -543,9 +567,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   String logServer = logServerReturn(lstServers);
                   Activator.getLog().info("Servers:" + logServer);
 
-                  sucursal = (String) ourAppSettings.get("settings.sucursal")
-                        .getCurrentValue();
-                  fileName = sucursal + "_" + idDocumento;
+//                  sucursal = (String) ourAppSettings.get("settings.sucursal")
+//                        .getCurrentValue();
+//                  fileName = sucursal + "_" + idDocumento;
+                  fileName = idDocumento;
 
                   emailNotificacion = (String) ourAppSettings.get("settings.email")
                         .getCurrentValue();
@@ -1106,6 +1131,16 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             return false;
          }
 
+         Boolean isAppFileName = (Boolean) settings.get("settings.isAppFileName");
+         Boolean isProcessFileName = (Boolean) settings.get("settings.isProcessFileName");
+         
+         if (!(isAppFileName.booleanValue() || isProcessFileName.booleanValue())){
+            status.addStatus("setting.settingvalidationexample.error",
+                  "settings.isAppFileName", "Debe activarse por lo menos un prefijo al nombre del archivo",
+                  SettingsStatus.STATUS_TYPE_ERROR);
+            return false;
+         }
+         
       }
       else if (pid.equals("celulas"))
       {
