@@ -146,7 +146,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          Map imagesOnDisk = Trabajo.getInstance();
          Iterator it = imagesOnDisk.entrySet().iterator();
          while (it.hasNext()){
-            boolean isLastFile = false;
             Map.Entry entry = (Map.Entry)it.next();
             Id id = (Id)entry.getKey();
             Activator.getLog().info("Procesando trabajo..... " + id);
@@ -499,8 +498,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
                      inputPrompt = (StringPrompt) context.getPromptFactory()
                            .newPrompt(StringPrompt.ID);
-                     idDocumento = (String) instance.get("settings.fileName")
-                           .getCurrentValue();
                      prefijoProceso = (String) instance.get("settings.process.filename")
                            .getCurrentValue();
                      SettingDefinition instanceIsFileName = instance
@@ -522,8 +519,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   //back inicio segundo pantallazo
                   if (isFileName.booleanValue())
                   {
+                     prefijoApp = (String) ourAppSettings.get("settings.app.filename")
+                           .getCurrentValue();
                      String pregunta = "Por favor digite el número de documento de identificación o radicado de la solicitud:";
-                     EditBoxPrompt editBox = new EditBoxPrompt("0", pregunta, idDocumento);
+                     EditBoxPrompt editBox = new EditBoxPrompt("0", pregunta, idDocumento, prefijoApp);
                      context.displayPrompt(editBox);
                      
                      Activator.getLog().info(
@@ -542,8 +541,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                            "Respuesta::: " + editBox.getRespuesta());
                      idDocumento = editBox.getRespuesta();
                      
-                     prefijoApp = (String) ourAppSettings.get("settings.app.filename")
-                           .getCurrentValue();
                      SettingDefinition instanceIsAppFileName = instance
                            .get("settings.isAppFileName");
                      isAppFileName = (Boolean) instanceIsAppFileName.getCurrentValue();
@@ -566,10 +563,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   .info("cantidad servidores despues de verificar:: " + lstServers.size());
                   String logServer = logServerReturn(lstServers);
                   Activator.getLog().info("Servers:" + logServer);
-
-//                  sucursal = (String) ourAppSettings.get("settings.sucursal")
-//                        .getCurrentValue();
-//                  fileName = sucursal + "_" + idDocumento;
+                  
                   fileName = idDocumento;
 
                   emailNotificacion = (String) ourAppSettings.get("settings.email")
@@ -1155,17 +1149,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          String userIdLog = (String) settings.get("settings.network.user");
          String passwordLog = (String) settings
                .get("settings.network.password");
-
-         if (gralSmbUser == "")
-         {
-            gralSmbUser = userIdLog;
-         }
-
-         if (gralSmbPassword == "")
-         {
-            gralSmbPassword = passwordLog;
-         }
-
+         
+         gralSmbUser = userIdLog;
+         gralSmbPassword = passwordLog;
+         
          if (!isEmpty(serverLog) && !isEmpty(sharedNameLog)
                && !isEmpty(userIdLog) && !isEmpty(passwordLog))
          {

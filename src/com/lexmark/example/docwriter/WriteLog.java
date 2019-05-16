@@ -109,11 +109,11 @@ public class WriteLog extends Thread
             if (fileStream != null) fileStream.close();
             if (inputStream != null) inputStream.close();
             if (client != null) client.close();
-            if (memoryManager != null)
-            {
-               Activator.getLog().info("Liberando memoria.");
-               memoryManager.releaseMemory();
-            }
+//            if (memoryManager != null)
+//            {
+//               Activator.getLog().info("Liberando memoria.");
+//               memoryManager.releaseMemory();
+//            }
          }
          catch (IOException e)
          {

@@ -62,10 +62,6 @@
 			<description value="settings.network.password.description" />
 			<length min="0" max="30" />
 		</element>
-		<element name="settings.sucursal" type="String">
-			<description value="settings.sucursal.description" />
-			<length min="1" max="50" />
-		</element>
 		<element name="settings.app.filename" type="String">
 			<description value="settings.app.filename.description" />
 			<length min="1" max="50" />
@@ -87,7 +83,6 @@
 			</group>
 			<group title="log.title">
 				<description value="log.description" />
-				<settingref name="settings.sucursal" />
 				<settingref name="settings.app.filename" />
 				<settingref name="settings.email" />
 				<settingref name="settings.log.promptName" />
@@ -279,12 +274,6 @@
 			<default value="false" />
 		</element>
 		
-		<element name="settings.fileName" type="String">
-			<description value="settings.fileName.description" />
-			<default value="Documento" />
-			<length min="3" max="15" />
-		</element>
-
 		<element name="settings.isFileName" type="Boolean">
 			<default value="true" />
 		</element>
@@ -347,7 +336,6 @@
 					<settingref name="settings.color" control="radio" />
 				</group>
 				<group title="settings.groupFileName">
-					<settingref name="settings.fileName" />
 					<settingref name="settings.isFileName" />
 					<settingref name="settings.isFileDate" />
 					<settingref name="settings.process.filename" /> 
