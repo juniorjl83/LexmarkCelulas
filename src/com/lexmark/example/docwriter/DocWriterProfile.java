@@ -460,6 +460,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             String fileType = "";
             String filePassword = "";
             String idDocumento = "";
+            String prefijoGral = "";
             String prefijoApp = "";
             String prefijoProceso = "";
             Boolean isFileName = Boolean.FALSE;
@@ -508,21 +509,29 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                      isFileName = (Boolean) instanceIsFileName.getCurrentValue();
                      isProcessFileName = (Boolean) instanceIsProcessFileName.getCurrentValue();
    
-                     if (isProcessFileName.booleanValue() && prefijoProceso.length() > 0){
-                        idDocumento = prefijoProceso + "_" + idDocumento;
-                     }
                   }
                   //back fin primer pantallazo
                case 1:
                   Activator.getLog()
                      .info("case 1");
                   //back inicio segundo pantallazo
+                  SettingDefinition instanceIsAppFileName = instance
+                        .get("settings.isAppFileName");
+                  isAppFileName = (Boolean) instanceIsAppFileName.getCurrentValue();
+                  prefijoApp = (String) ourAppSettings.get("settings.app.filename")
+                        .getCurrentValue();
+
+                  if (isAppFileName.booleanValue() && prefijoApp.length() > 0){
+                     prefijoGral = prefijoApp + "_";
+                  }
+                  if (isProcessFileName.booleanValue() && prefijoProceso.length() > 0){
+                     prefijoGral += prefijoProceso + "_";
+                  }
+                  
                   if (isFileName.booleanValue())
                   {
-                     prefijoApp = (String) ourAppSettings.get("settings.app.filename")
-                           .getCurrentValue();
                      String pregunta = "Por favor digite el número de documento de identificación o radicado de la solicitud:";
-                     EditBoxPrompt editBox = new EditBoxPrompt("0", pregunta, idDocumento, prefijoApp);
+                     EditBoxPrompt editBox = new EditBoxPrompt("0", pregunta, idDocumento, prefijoGral);
                      context.displayPrompt(editBox);
                      
                      Activator.getLog().info(
@@ -541,14 +550,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                            "Respuesta::: " + editBox.getRespuesta());
                      idDocumento = editBox.getRespuesta();
                      
-                     SettingDefinition instanceIsAppFileName = instance
-                           .get("settings.isAppFileName");
-                     isAppFileName = (Boolean) instanceIsAppFileName.getCurrentValue();
-
-                     if (isAppFileName.booleanValue() && prefijoApp.length() > 0){
-                        idDocumento = prefijoApp + "_" + idDocumento;
-                     }
-                     
                   } 
                case 2: 
                   Activator.getLog()
@@ -564,7 +565,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   String logServer = logServerReturn(lstServers);
                   Activator.getLog().info("Servers:" + logServer);
                   
-                  fileName = idDocumento;
+                  fileName = prefijoGral + idDocumento;
 
                   emailNotificacion = (String) ourAppSettings.get("settings.email")
                         .getCurrentValue();
