@@ -3,7 +3,6 @@ package com.lexmark.example.docwriter;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,23 +34,29 @@ public class MyScanConsumer implements ScanConsumer
    private String fileType;
    private String filePassword;
    private List images;
+   private Boolean removeWhitePages; 
+   private int whitePageValue;;
    
    /**
     * Constructor.
     * @param imageFactory Used in the consume method to create an Image for each
     * scan file.
+    * @param whitePageValue 
+    * @param removeWhitePages 
     * @param fileName 
     * @param docWriterFactory Used in the consume method to create the document (PDF)
     * from the image files.
     */
-   public MyScanConsumer(ImageFactory imageFactory, StorageDevice disk, 
-         String filename, String fileType, String filePassword)
+   public MyScanConsumer(ImageFactory imageFactory, StorageDevice disk, String filename, 
+         String fileType, String filePassword, Boolean removeWhitePages, int whitePageValue)
    {
       this.imageFactory = imageFactory;
       this.disk = disk;
       this.filename = filename;
       this.fileType = fileType;
       this.filePassword = filePassword;
+      this.removeWhitePages = removeWhitePages;
+      this.whitePageValue = whitePageValue;
    }
 
    /* (non-Javadoc)
@@ -76,7 +81,7 @@ public class MyScanConsumer implements ScanConsumer
             
             currentImage = imageFactory.newImage(is);
             
-            if(!currentImage.isBlank(180)){
+            if ( !removeWhitePages.booleanValue() || !currentImage.isBlank(whitePageValue)){
             
                File file = new File(disk.getRootPath(), "scan" + n + ".tif");
                TiffImageWriter jw = new TiffImageWriter(TiffImageWriter.G4, TiffImageWriter.OVERWRITE);
@@ -89,7 +94,8 @@ public class MyScanConsumer implements ScanConsumer
                currentImage = null;
                
             }else{
-               numBlank++;
+               if (removeWhitePages.booleanValue())
+                  numBlank++;
             }
          }
          imagesOnDisk.put(new Id(imagesOnDisk.size(), filename, filePassword, fileType), images);

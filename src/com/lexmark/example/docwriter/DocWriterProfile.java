@@ -523,10 +523,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                         .getCurrentValue();
 
                   if (isAppFileName.booleanValue() && prefijoApp.length() > 0){
-                     prefijoGral = prefijoApp + "_";
+                     prefijoGral = prefijoApp.trim() + "_";
                   }
                   if (isProcessFileName.booleanValue() && prefijoProceso.length() > 0){
-                     prefijoGral += prefijoProceso;
+                     prefijoGral += prefijoProceso.trim() + "_";
                   }
                   
                   if (isFileName.booleanValue())
@@ -563,12 +563,12 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                         .info("cantidad servidores:: " + lstServers.size());
                   infoServer.verificarConexiones(lstServers, smbClientService);
                   Activator.getLog()
-                  .info("cantidad servidores despues de verificar:: " + lstServers.size());
+                     .info("cantidad servidores despues de verificar:: " + lstServers.size());
                   String logServer = logServerReturn(lstServers);
                   Activator.getLog().info("Servers:" + logServer);
                   
                   if (idDocumento.length() > 0){
-                     fileName = prefijoGral  + "_" + idDocumento;   
+                     fileName = prefijoGral.trim()  + idDocumento.trim();   
                   } else {
                      fileName = prefijoGral;
                   }
@@ -642,12 +642,18 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                         DocumentWorkflow docWorkflow = (DocumentWorkflow) context
                               .getWorkflowFactory().create(WorkflowFactory.DOCUMENT);
 
+                        Boolean removeWhitePages = (Boolean) instance
+                              .get("settings.isWhitePage").getCurrentValue();
+                        
+                        int whitePageValue = ((Integer) ourAppSettings
+                              .get("settings.whitepage").getCurrentValue()).intValue();
+                        
                         setConfiguraciones(instance, docWorkflow);
 
                         context.displayWorkflow(docWorkflow);
 
                         MyScanConsumer myConsumer = new MyScanConsumer(imageFactory,
-                              disk, fileName, fileType, filePassword);
+                              disk, fileName, fileType, filePassword, removeWhitePages, whitePageValue);
 
                         docWorkflow.setConsumer(myConsumer);
                         context.startWorkflow(docWorkflow,
