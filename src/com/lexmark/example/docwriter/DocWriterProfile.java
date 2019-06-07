@@ -24,6 +24,7 @@ import org.ungoverned.gravity.servicebinder.ServiceBinderContext;
 
 import com.lexmark.core.IntegerElem;
 import com.lexmark.example.docwriter.customvlm.EditBoxPrompt;
+import com.lexmark.example.docwriter.customvlm.FinishPrompt;
 import com.lexmark.example.docwriter.customvlm.OmurPrompt;
 import com.lexmark.example.docwriter.singleton.Id;
 import com.lexmark.example.docwriter.singleton.Trabajo;
@@ -243,7 +244,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             int numSheets = fileNames.size();
             lineLog.setNumSheets(numSheets);
             WriteLog wl = new WriteLog(clientLog, Activator.getLog(), logFileName,
-                  lineLog, memoryManager);
+                  lineLog);
             lstThreads.add(wl);
             wl.start();
             
@@ -525,12 +526,13 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                      prefijoGral = prefijoApp + "_";
                   }
                   if (isProcessFileName.booleanValue() && prefijoProceso.length() > 0){
-                     prefijoGral += prefijoProceso + "_";
+                     prefijoGral += prefijoProceso;
                   }
                   
                   if (isFileName.booleanValue())
                   {
-                     String pregunta = "Por favor digite el número de documento de identificación o radicado de la solicitud:";
+                     String pregunta = (String) instance
+                           .get("settings.fileName.question").getCurrentValue();
                      EditBoxPrompt editBox = new EditBoxPrompt("0", pregunta, idDocumento, prefijoGral);
                      context.displayPrompt(editBox);
                      
@@ -565,7 +567,11 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   String logServer = logServerReturn(lstServers);
                   Activator.getLog().info("Servers:" + logServer);
                   
-                  fileName = prefijoGral + idDocumento;
+                  if (idDocumento.length() > 0){
+                     fileName = prefijoGral  + "_" + idDocumento;   
+                  } else {
+                     fileName = prefijoGral;
+                  }
 
                   emailNotificacion = (String) ourAppSettings.get("settings.email")
                         .getCurrentValue();
@@ -627,72 +633,99 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   }
                   filePassword = (String) instance
                         .get("settings.instanceFilePassword").getCurrentValue();
+               case 3:
+                  if (lstServers!= null && !lstServers.isEmpty())
+                  {
+
+                     try
+                     {
+                        DocumentWorkflow docWorkflow = (DocumentWorkflow) context
+                              .getWorkflowFactory().create(WorkflowFactory.DOCUMENT);
+
+                        setConfiguraciones(instance, docWorkflow);
+
+                        context.displayWorkflow(docWorkflow);
+
+                        MyScanConsumer myConsumer = new MyScanConsumer(imageFactory,
+                              disk, fileName, fileType, filePassword);
+
+                        docWorkflow.setConsumer(myConsumer);
+                        context.startWorkflow(docWorkflow,
+                              BasicProfileContext.WAIT_FOR_SCAN_COMPLETE);
+
+                        WaitMessagePrompt wmp = (WaitMessagePrompt) context
+                              .getPromptFactory().newPrompt(WaitMessagePrompt.ID);
+
+                        getlineLog(instance, lstServers, idDocumento, fileType, myConsumer.getNumBlank());
+
+                        // This guy does all of the work
+                        Activator.getLog().info("antes de estopable");
+                        MyStoppable myStoppable = new MyStoppable(myConsumer,
+                              lstServers, context, memoryManagerInstance);
+
+                        wmp.setWorkerRunnable(myStoppable, "Creación del archivo");
+                        wmp.setMessage("Enviando el archivo...");
+                        context.displayPrompt(wmp);
+                        
+                        String[] fileTypeAsArrayFinal =
+                           { "Si, al mismo destino", "Si, a un destino distinto", "No" };
+                        
+                        FinishPrompt finishPromt = new FinishPrompt(
+                              "1",
+                              "Desea digitalizar documentos adicionales.", fileTypeAsArrayFinal,
+                              0, lineLog.getNumSheets());
+                        context.displayPrompt(finishPromt);
+                        
+                        if ("cancel".equals(finishPromt.getDismissButton()))
+                        {
+                           throw new PromptException(
+                                 PromptException.PROMPT_CANCELLED_BY_USER);
+                        }
+                        
+                        Activator.getLog().info(
+                              "Respuesta::: " + finishPromt.getRespuesta());
+                        int selectionType = Integer.parseInt(finishPromt.getRespuesta());
+                        idDocumento = "";
+                        if (selectionType == 0)
+                        {
+                           if (isFileName.booleanValue()){
+                              state = 1;   
+                           }else{
+                              state = 2;
+                           }
+                           break;
+                        } else if (selectionType == 1){
+                           state = 0;
+                           break;
+                        } 
+                     }
+                     catch (PromptException e)
+                     {
+                        Activator.getLog().info("Exception:: " + e.getMessage());
+                     }
+                     catch (Exception e)
+                     {
+                        Activator.getLog().info("Exception:: " + e.getMessage());
+                        MessagePrompt noInstances = (MessagePrompt) context
+                              .getPromptFactory().newPrompt(MessagePrompt.ID);
+                        noInstances.setMessage(
+                              "No es posible conectar al destino. contacte con el administrador!");
+                        context.displayPrompt(noInstances);
+                     }
+
+                  }
+                  else
+                  {
+                     MessagePrompt noInstances = (MessagePrompt) context
+                           .getPromptFactory().newPrompt(MessagePrompt.ID);
+                     noInstances.setMessage(
+                           "No es posible conectar a ningún servidor destino. Contacte con el administrador!");
+                     context.displayPrompt(noInstances);
+                  }
                default:
                   break loop; 
                }
             }
-
-            if (lstServers!= null && !lstServers.isEmpty())
-            {
-
-               try
-               {
-                  // First, clean up any old files lying around in our directory
-                  //cleanUpOldFiles();
-
-                  DocumentWorkflow docWorkflow = (DocumentWorkflow) context
-                        .getWorkflowFactory().create(WorkflowFactory.DOCUMENT);
-
-                  setConfiguraciones(instance, docWorkflow);
-
-                  context.displayWorkflow(docWorkflow);
-
-                  MyScanConsumer myConsumer = new MyScanConsumer(imageFactory,
-                        disk, fileName, fileType, filePassword);
-
-                  docWorkflow.setConsumer(myConsumer);
-                  context.startWorkflow(docWorkflow,
-                        BasicProfileContext.WAIT_FOR_SCAN_COMPLETE);
-
-                  WaitMessagePrompt wmp = (WaitMessagePrompt) context
-                        .getPromptFactory().newPrompt(WaitMessagePrompt.ID);
-
-                  getlineLog(instance, lstServers, idDocumento, fileType, myConsumer.getNumBlank());
-
-                  // This guy does all of the work
-                  Activator.getLog().info("antes de estopable");
-                  MyStoppable myStoppable = new MyStoppable(myConsumer,
-                        lstServers, context, memoryManagerInstance);
-
-                  wmp.setWorkerRunnable(myStoppable, "Creación del archivo");
-                  wmp.setMessage("Enviando el archivo...");
-                  context.displayPrompt(wmp);
-
-               }
-               catch (PromptException e)
-               {
-                  Activator.getLog().info("Exception:: " + e.getMessage());
-               }
-               catch (Exception e)
-               {
-                  Activator.getLog().info("Exception:: " + e.getMessage());
-                  MessagePrompt noInstances = (MessagePrompt) context
-                        .getPromptFactory().newPrompt(MessagePrompt.ID);
-                  noInstances.setMessage(
-                        "No es posible conectar al destino. contacte con el administrador!");
-                  context.displayPrompt(noInstances);
-               }
-
-            }
-            else
-            {
-               MessagePrompt noInstances = (MessagePrompt) context
-                     .getPromptFactory().newPrompt(MessagePrompt.ID);
-               noInstances.setMessage(
-                     "No es posible conectar a ningún servidor destino. Contacte con el administrador!");
-               context.displayPrompt(noInstances);
-            }
-
          }
          else
          {

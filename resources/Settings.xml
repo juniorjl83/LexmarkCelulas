@@ -277,6 +277,11 @@
 		<element name="settings.isFileName" type="Boolean">
 			<default value="true" />
 		</element>
+		
+		<element name="settings.fileName.question" type="String">
+			<default value="Por favor digite el número de documento de identificación o radicado de la solicitud:" />
+			<length min="1" max="100" />
+		</element>
 
 		<element name="settings.isFileDate" type="Boolean">
 			<default value="true" />
@@ -337,6 +342,7 @@
 				</group>
 				<group title="settings.groupFileName">
 					<settingref name="settings.isFileName" />
+					<settingref name="settings.fileName.question" />
 					<settingref name="settings.isFileDate" />
 					<settingref name="settings.process.filename" /> 
 					<settingref name="settings.isAppFileName" /> 
