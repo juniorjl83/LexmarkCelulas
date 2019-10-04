@@ -554,6 +554,7 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                      
                   } 
                case 2: 
+                  isMultiTiff = Boolean.FALSE;
                   Activator.getLog()
                      .info("case 2");
                   InfoServer infoServer = new InfoServer(Activator.getLog());
