@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.lexmark.prtapp.smbclient.ConnectionException;
 import com.lexmark.prtapp.smbclient.SmbClient;
 import com.lexmark.prtapp.smbclient.SmbClientException;
@@ -18,9 +15,6 @@ public class WriteLog extends Thread
    private SmbClient client = null;
    private AppLogRef log;
    private String fileName;
-   private String aa = "99";
-   private String mm = "99";
-   private String dd = "99";
    private Log line;
    private Boolean isFinish = Boolean.FALSE;
 
@@ -36,14 +30,6 @@ public class WriteLog extends Thread
    public synchronized void run()
    {
       log.info("entra escribir log");
-      SimpleDateFormat faa = new SimpleDateFormat("yy");
-      SimpleDateFormat fmm = new SimpleDateFormat("MM");
-      SimpleDateFormat fdd = new SimpleDateFormat("dd");
-      Date date = new Date();
-
-      aa = faa.format(date);
-      mm = fmm.format(date);
-      dd = fdd.format(date);
       // disable date, just one file
       // fileName = fileName + aa + mm + dd + ".txt";
       fileName = fileName + ".txt";

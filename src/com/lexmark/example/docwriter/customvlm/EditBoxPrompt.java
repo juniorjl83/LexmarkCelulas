@@ -17,6 +17,7 @@ public class EditBoxPrompt implements VlmlPrompt
    private String texto;
    private boolean exit = false;
    private String respuesta;
+   private String prefijo;
    
    /** We need to keep track of the VLML prompt context ourselves here */
    VlmlPromptContext context = null;
@@ -25,12 +26,13 @@ public class EditBoxPrompt implements VlmlPrompt
    /** Keep track of how we are dismissed so the profile can know */
    String dismissButton = "";
 
-   public EditBoxPrompt(String idPregunta, String pregunta, String texto)
+   public EditBoxPrompt(String idPregunta, String pregunta, String texto, String prefijo)
    {
       this.idPregunta = idPregunta;
       this.pregunta = pregunta;
       this.texto = texto;
       this.respuesta = texto;
+      this.prefijo = prefijo.length() > 0 ? prefijo + "_" : "";
    }
 
    public String getVlml()
@@ -38,29 +40,32 @@ public class EditBoxPrompt implements VlmlPrompt
       StringBuffer screen = new StringBuffer();
       screen.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
       screen.append("<!-- VLML COOKBOOK - WVGA - EDITBOX EXAMPLE  -->");
-      screen.append("<GridLayout name=\"text\" rows=\"60\" columns=\"1\" verticalScroll=\"never\" horizontalScroll=\"never\" distribution=\"heterogeneous\">");
+      screen.append("<GridLayout name=\"text\" rows=\"6\" columns=\"2\" verticalScroll=\"never\" horizontalScroll=\"never\" distribution=\"heterogeneous\">");
       screen.append("   <!-- TITLE LABEL  -->");
-      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"shrink\" xPadding=\"4\" yPadding=\"4\" left=\"0\" right=\"1\" top=\"0\" bottom=\"1\">");
+      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"shrink\" xPadding=\"4\" yPadding=\"4\" left=\"0\" right=\"2\" top=\"0\" bottom=\"1\">");
       screen.append("      <Label name=\"label\" size=\"medium\" style=\"bold\" text=\"" + pregunta + "\" justification=\"center\" maxHeight=\"15\" />");
       screen.append("   </AttachChild>");
       screen.append("   <!-- EDITBOX  -->");
-      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"shrink\" xPadding=\"200\" yPadding=\"0\" left=\"0\" right=\"1\" top=\"1\" bottom=\"2\">");
+      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"shrink\" xPadding=\"0\" yPadding=\"0\" left=\"0\" right=\"1\" top=\"1\" bottom=\"2\">");
+      screen.append("      <Label name=\"label\" size=\"medium\" style=\"normal\" text=\""+ prefijo +"\" justification=\"right\" maxHeight=\"15\" />");
+      screen.append("   </AttachChild>");
+      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"shrink\" xPadding=\"20\" yPadding=\"0\" left=\"1\" right=\"2\" top=\"1\" bottom=\"2\">");
       screen.append("      <EditBox name=\"entryField\" text=\""+ texto +"\" maxLength=\"70\" visible=\"true\" focused=\"true\" />");
       screen.append("   </AttachChild>");
       screen.append("   <!-- MIN MAX LABEL  -->");
-      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"fill\" xPadding=\"4\" yPadding=\"0\" left=\"0\" right=\"1\" top=\"2\" bottom=\"3\">");
+      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"fill\" xPadding=\"4\" yPadding=\"0\" left=\"0\" right=\"2\" top=\"2\" bottom=\"3\">");
       screen.append("      <Label name=\"minmaxlabel\" text=\"Caracteres minimo 3. Caracteres Maximo 70\" justification=\"center\" size=\"small\" />");
       screen.append("   </AttachChild>");
       screen.append("   <!-- KEYBOARD  -->");
-      screen.append("   <AttachChild xGFill=\"shrink\" yGFill=\"expandFill\" xPadding=\"0\" yPadding=\"2\" left=\"0\" right=\"1\" top=\"3\" bottom=\"4\">");
+      screen.append("   <AttachChild xGFill=\"shrink\" yGFill=\"expandFill\" xPadding=\"0\" yPadding=\"2\" left=\"0\" right=\"2\" top=\"3\" bottom=\"4\">");
       screen.append("      <Keyboard name=\"keypad\" type=\"alphanumeric\" />");
       screen.append("   </AttachChild>");
       screen.append("   <!-- HORIZONTAL SEPARATION LINE  -->");
-      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"fill\" xPadding=\"0\" yPadding=\"0\" left=\"0\" right=\"1\" top=\"4\" bottom=\"5\">");
+      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"fill\" xPadding=\"0\" yPadding=\"0\" left=\"0\" right=\"2\" top=\"4\" bottom=\"5\">");
       screen.append("      <Image name=\"separatorLine\" imageName=\"NavRowBottomLine\" />");
       screen.append("   </AttachChild>");
       screen.append("   <!-- NAVIGATION BAR -->");
-      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"fill\" xPadding=\"0\" yPadding=\"0\" left=\"0\" right=\"1\" top=\"5\" bottom=\"6\">");
+      screen.append("   <AttachChild xGFill=\"expandFill\" yGFill=\"fill\" xPadding=\"0\" yPadding=\"0\" left=\"0\" right=\"2\" top=\"5\" bottom=\"6\">");
       screen.append("      <BoxLayout name=\"navBar\" orientation=\"horizontal\" color=\"b2b2b2\">");
       
       screen.append("         <!-- NEXT BUTTON  -->");

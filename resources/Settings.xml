@@ -53,6 +53,11 @@
 			</options>
 			<default value="6" />
 		</element>
+		<!-- settings.whitepage -->
+	 	<element type="Integer" name="settings.whitepage">            
+			<range max="255" min="1"/>            
+			<default value="180"/>        
+		</element> 
 		<element name="settings.network.user" type="String">
 			<description value="settings.network.user.description" />
 			<length min="0" max="30" />
@@ -62,8 +67,8 @@
 			<description value="settings.network.password.description" />
 			<length min="0" max="30" />
 		</element>
-		<element name="settings.sucursal" type="String">
-			<description value="settings.sucursal.description" />
+		<element name="settings.app.filename" type="String">
+			<description value="settings.app.filename.description" />
 			<length min="1" max="50" />
 		</element>
 		<element name="settings.email" type="String">
@@ -75,6 +80,7 @@
 				<settingref name="settings.icon.text" />
 				<settingref name="settings.icon.image" />
 				<settingref name="settings.memory" />
+				<settingref name="settings.whitepage" />
 			</group>
 			<group title="networkuser.title">
 				<description value="networkuser.description" />
@@ -83,7 +89,7 @@
 			</group>
 			<group title="log.title">
 				<description value="log.description" />
-				<settingref name="settings.sucursal" />
+				<settingref name="settings.app.filename" />
 				<settingref name="settings.email" />
 				<settingref name="settings.log.promptName" />
 				<settingref name="settings.log.server" />
@@ -261,14 +267,30 @@
 			<length min="0" max="30" />
 		</element>
 
-		<element name="settings.fileName" type="String">
-			<description value="settings.fileName.description" />
-			<default value="Documento" />
-			<length min="3" max="15" />
+		<element name="settings.process.filename" type="String">
+			<description value="settings.process.filename.description" />
+			<length min="0" max="50" />
+		</element>
+		
+		<element name="settings.isAppFileName" type="Boolean">
+			<default value="true" />
 		</element>
 
+		<element name="settings.isProcessFileName" type="Boolean">
+			<default value="false" />
+		</element>
+		
+		<element name="settings.isWhitePage" type="Boolean">
+			<default value="false" />
+		</element>
+		
 		<element name="settings.isFileName" type="Boolean">
 			<default value="true" />
+		</element>
+		
+		<element name="settings.fileName.question" type="String">
+			<default value="Por favor digite el número de documento de identificación o radicado de la solicitud:" />
+			<length min="1" max="100" />
 		</element>
 
 		<element name="settings.isFileDate" type="Boolean">
@@ -329,9 +351,15 @@
 					<settingref name="settings.color" control="radio" />
 				</group>
 				<group title="settings.groupFileName">
-					<settingref name="settings.fileName" />
 					<settingref name="settings.isFileName" />
+					<settingref name="settings.fileName.question" />
 					<settingref name="settings.isFileDate" />
+					<settingref name="settings.process.filename" /> 
+					<settingref name="settings.isAppFileName" /> 
+					<settingref name="settings.isProcessFileName" />
+				</group>
+				<group title="settings.groupWhitePage">
+					<settingref name="settings.isWhitePage" />
 				</group>
 			</group>
 		</layout>

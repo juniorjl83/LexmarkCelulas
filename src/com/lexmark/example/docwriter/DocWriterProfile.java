@@ -24,6 +24,7 @@ import org.ungoverned.gravity.servicebinder.ServiceBinderContext;
 
 import com.lexmark.core.IntegerElem;
 import com.lexmark.example.docwriter.customvlm.EditBoxPrompt;
+import com.lexmark.example.docwriter.customvlm.FinishPrompt;
 import com.lexmark.example.docwriter.customvlm.OmurPrompt;
 import com.lexmark.example.docwriter.singleton.Id;
 import com.lexmark.example.docwriter.singleton.Trabajo;
@@ -146,7 +147,6 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          Map imagesOnDisk = Trabajo.getInstance();
          Iterator it = imagesOnDisk.entrySet().iterator();
          while (it.hasNext()){
-            boolean isLastFile = false;
             Map.Entry entry = (Map.Entry)it.next();
             Id id = (Id)entry.getKey();
             Activator.getLog().info("Procesando trabajo..... " + id);
@@ -461,7 +461,12 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             String fileType = "";
             String filePassword = "";
             String idDocumento = "";
+            String prefijoGral = "";
+            String prefijoApp = "";
+            String prefijoProceso = "";
             Boolean isFileName = Boolean.FALSE;
+            Boolean isProcessFileName = Boolean.FALSE;
+            Boolean isAppFileName = Boolean.FALSE;
             StringPrompt inputPrompt = null;
             int initialSelection = 0;
             
@@ -495,11 +500,15 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
 
                      inputPrompt = (StringPrompt) context.getPromptFactory()
                            .newPrompt(StringPrompt.ID);
-                     idDocumento = (String) instance.get("settings.fileName")
+                     prefijoProceso = (String) instance.get("settings.process.filename")
                            .getCurrentValue();
                      SettingDefinition instanceIsFileName = instance
                            .get("settings.isFileName");
+                     SettingDefinition instanceIsProcessFileName = instance
+                           .get("settings.isProcessFileName");
+                     
                      isFileName = (Boolean) instanceIsFileName.getCurrentValue();
+                     isProcessFileName = (Boolean) instanceIsProcessFileName.getCurrentValue();
    
                   }
                   //back fin primer pantallazo
@@ -507,14 +516,28 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   Activator.getLog()
                      .info("case 1");
                   //back inicio segundo pantallazo
+                  SettingDefinition instanceIsAppFileName = instance
+                        .get("settings.isAppFileName");
+                  isAppFileName = (Boolean) instanceIsAppFileName.getCurrentValue();
+                  prefijoApp = (String) ourAppSettings.get("settings.app.filename")
+                        .getCurrentValue();
+
+                  if (isAppFileName.booleanValue() && prefijoApp.length() > 0){
+                     prefijoGral = prefijoApp.trim() + "_";
+                  }
+                  if (isProcessFileName.booleanValue() && prefijoProceso.length() > 0){
+                     prefijoGral += prefijoProceso.trim() + "_";
+                  }
+                  
                   if (isFileName.booleanValue())
                   {
-                     String pregunta = "Por favor digite el número de documento de identificación o radicado de la solicitud:";
-                     EditBoxPrompt editBox = new EditBoxPrompt("0", pregunta, idDocumento);
+                     String pregunta = (String) instance
+                           .get("settings.fileName.question").getCurrentValue();
+                     EditBoxPrompt editBox = new EditBoxPrompt("0", pregunta, idDocumento, prefijoGral);
                      context.displayPrompt(editBox);
                      
                      Activator.getLog().info(
-                           "dismiis button::: " + editBox.getDismissButton());
+                           "dismis button::: " + editBox.getDismissButton());
                      if ("cancel".equals(editBox.getDismissButton()))
                      {
                         throw new PromptException(
@@ -528,8 +551,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                      Activator.getLog().info(
                            "Respuesta::: " + editBox.getRespuesta());
                      idDocumento = editBox.getRespuesta();
+                     
                   } 
                case 2: 
+                  isMultiTiff = Boolean.FALSE;
                   Activator.getLog()
                      .info("case 2");
                   InfoServer infoServer = new InfoServer(Activator.getLog());
@@ -539,13 +564,15 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                         .info("cantidad servidores:: " + lstServers.size());
                   infoServer.verificarConexiones(lstServers, smbClientService);
                   Activator.getLog()
-                  .info("cantidad servidores despues de verificar:: " + lstServers.size());
+                     .info("cantidad servidores despues de verificar:: " + lstServers.size());
                   String logServer = logServerReturn(lstServers);
                   Activator.getLog().info("Servers:" + logServer);
-
-                  sucursal = (String) ourAppSettings.get("settings.sucursal")
-                        .getCurrentValue();
-                  fileName = sucursal + "_" + idDocumento;
+                  
+                  if (idDocumento.length() > 0){
+                     fileName = prefijoGral.trim()  + idDocumento.trim();   
+                  } else {
+                     fileName = prefijoGral;
+                  }
 
                   emailNotificacion = (String) ourAppSettings.get("settings.email")
                         .getCurrentValue();
@@ -607,72 +634,105 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
                   }
                   filePassword = (String) instance
                         .get("settings.instanceFilePassword").getCurrentValue();
+               case 3:
+                  if (lstServers!= null && !lstServers.isEmpty())
+                  {
+
+                     try
+                     {
+                        DocumentWorkflow docWorkflow = (DocumentWorkflow) context
+                              .getWorkflowFactory().create(WorkflowFactory.DOCUMENT);
+
+                        Boolean removeWhitePages = (Boolean) instance
+                              .get("settings.isWhitePage").getCurrentValue();
+                        
+                        int whitePageValue = ((Integer) ourAppSettings
+                              .get("settings.whitepage").getCurrentValue()).intValue();
+                        
+                        setConfiguraciones(instance, docWorkflow);
+
+                        context.displayWorkflow(docWorkflow);
+
+                        MyScanConsumer myConsumer = new MyScanConsumer(imageFactory,
+                              disk, fileName, fileType, filePassword, removeWhitePages, whitePageValue);
+
+                        docWorkflow.setConsumer(myConsumer);
+                        context.startWorkflow(docWorkflow,
+                              BasicProfileContext.WAIT_FOR_SCAN_COMPLETE);
+
+                        WaitMessagePrompt wmp = (WaitMessagePrompt) context
+                              .getPromptFactory().newPrompt(WaitMessagePrompt.ID);
+
+                        getlineLog(instance, lstServers, idDocumento, fileType, myConsumer.getNumBlank());
+
+                        // This guy does all of the work
+                        Activator.getLog().info("antes de estopable");
+                        MyStoppable myStoppable = new MyStoppable(myConsumer,
+                              lstServers, context, memoryManagerInstance);
+
+                        wmp.setWorkerRunnable(myStoppable, "Creación del archivo");
+                        wmp.setMessage("Enviando el archivo...");
+                        context.displayPrompt(wmp);
+                        
+                        String[] fileTypeAsArrayFinal =
+                           { "Si, al mismo destino", "Si, a un destino distinto", "No" };
+                        
+                        FinishPrompt finishPromt = new FinishPrompt(
+                              "1",
+                              "Desea digitalizar documentos adicionales.", fileTypeAsArrayFinal,
+                              0, lineLog.getNumSheets());
+                        context.displayPrompt(finishPromt);
+                        
+                        if ("cancel".equals(finishPromt.getDismissButton()))
+                        {
+                           throw new PromptException(
+                                 PromptException.PROMPT_CANCELLED_BY_USER);
+                        }
+                        
+                        Activator.getLog().info(
+                              "Respuesta::: " + finishPromt.getRespuesta());
+                        int selectionType = Integer.parseInt(finishPromt.getRespuesta());
+                        idDocumento = "";
+                        if (selectionType == 0)
+                        {
+                           if (isFileName.booleanValue()){
+                              state = 1;   
+                           }else{
+                              state = 2;
+                           }
+                           break;
+                        } else if (selectionType == 1){
+                           state = 0;
+                           break;
+                        } 
+                     }
+                     catch (PromptException e)
+                     {
+                        Activator.getLog().info("Exception:: " + e.getMessage());
+                     }
+                     catch (Exception e)
+                     {
+                        Activator.getLog().info("Exception:: " + e.getMessage());
+                        MessagePrompt noInstances = (MessagePrompt) context
+                              .getPromptFactory().newPrompt(MessagePrompt.ID);
+                        noInstances.setMessage(
+                              "No es posible conectar al destino. contacte con el administrador!");
+                        context.displayPrompt(noInstances);
+                     }
+
+                  }
+                  else
+                  {
+                     MessagePrompt noInstances = (MessagePrompt) context
+                           .getPromptFactory().newPrompt(MessagePrompt.ID);
+                     noInstances.setMessage(
+                           "No es posible conectar a ningún servidor destino. Contacte con el administrador!");
+                     context.displayPrompt(noInstances);
+                  }
                default:
                   break loop; 
                }
             }
-
-            if (lstServers!= null && !lstServers.isEmpty())
-            {
-
-               try
-               {
-                  // First, clean up any old files lying around in our directory
-                  //cleanUpOldFiles();
-
-                  DocumentWorkflow docWorkflow = (DocumentWorkflow) context
-                        .getWorkflowFactory().create(WorkflowFactory.DOCUMENT);
-
-                  setConfiguraciones(instance, docWorkflow);
-
-                  context.displayWorkflow(docWorkflow);
-
-                  MyScanConsumer myConsumer = new MyScanConsumer(imageFactory,
-                        disk, fileName, fileType, filePassword);
-
-                  docWorkflow.setConsumer(myConsumer);
-                  context.startWorkflow(docWorkflow,
-                        BasicProfileContext.WAIT_FOR_SCAN_COMPLETE);
-
-                  WaitMessagePrompt wmp = (WaitMessagePrompt) context
-                        .getPromptFactory().newPrompt(WaitMessagePrompt.ID);
-
-                  getlineLog(instance, lstServers, idDocumento, fileType, myConsumer.getNumBlank());
-
-                  // This guy does all of the work
-                  Activator.getLog().info("antes de estopable");
-                  MyStoppable myStoppable = new MyStoppable(myConsumer,
-                        lstServers, context, memoryManagerInstance);
-
-                  wmp.setWorkerRunnable(myStoppable, "Creación del archivo");
-                  wmp.setMessage("Enviando el archivo...");
-                  context.displayPrompt(wmp);
-
-               }
-               catch (PromptException e)
-               {
-                  Activator.getLog().info("Exception:: " + e.getMessage());
-               }
-               catch (Exception e)
-               {
-                  Activator.getLog().info("Exception:: " + e.getMessage());
-                  MessagePrompt noInstances = (MessagePrompt) context
-                        .getPromptFactory().newPrompt(MessagePrompt.ID);
-                  noInstances.setMessage(
-                        "No es posible conectar al destino. contacte con el administrador!");
-                  context.displayPrompt(noInstances);
-               }
-
-            }
-            else
-            {
-               MessagePrompt noInstances = (MessagePrompt) context
-                     .getPromptFactory().newPrompt(MessagePrompt.ID);
-               noInstances.setMessage(
-                     "No es posible conectar a ningún servidor destino. Contacte con el administrador!");
-               context.displayPrompt(noInstances);
-            }
-
          }
          else
          {
@@ -1106,6 +1166,16 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
             return false;
          }
 
+         Boolean isAppFileName = (Boolean) settings.get("settings.isAppFileName");
+         Boolean isProcessFileName = (Boolean) settings.get("settings.isProcessFileName");
+         
+         if (!(isAppFileName.booleanValue() || isProcessFileName.booleanValue())){
+            status.addStatus("setting.settingvalidationexample.error",
+                  "settings.isAppFileName", "Debe activarse por lo menos un prefijo al nombre del archivo",
+                  SettingsStatus.STATUS_TYPE_ERROR);
+            return false;
+         }
+         
       }
       else if (pid.equals("celulas"))
       {
@@ -1120,17 +1190,10 @@ public class DocWriterProfile implements PrtappProfile, WelcomeScreenable,
          String userIdLog = (String) settings.get("settings.network.user");
          String passwordLog = (String) settings
                .get("settings.network.password");
-
-         if (gralSmbUser == "")
-         {
-            gralSmbUser = userIdLog;
-         }
-
-         if (gralSmbPassword == "")
-         {
-            gralSmbPassword = passwordLog;
-         }
-
+         
+         gralSmbUser = userIdLog;
+         gralSmbPassword = passwordLog;
+         
          if (!isEmpty(serverLog) && !isEmpty(sharedNameLog)
                && !isEmpty(userIdLog) && !isEmpty(passwordLog))
          {

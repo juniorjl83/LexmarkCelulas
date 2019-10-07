@@ -125,7 +125,7 @@ public class FileShareHandler implements ScanConsumer
       
       if (isDateMark.booleanValue()){
          dateMark = dateMark + "_";
-         SimpleDateFormat sdf = new SimpleDateFormat("MMddyyHHmmss");
+         SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
          Date date = new Date();
          dateMark = dateMark +  sdf.format(date);
          Activator.getLog().info("fecha texto: " + dateMark);
